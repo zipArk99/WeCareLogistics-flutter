@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:wecare_logistics/screens/login_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
+  static const String signUpScreenRoute = "/SignUpScreenRoute";
   @override
   State<StatefulWidget> createState() {
     return SignUpScreenState();
@@ -192,9 +194,24 @@ class SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ),
                   ),
-                  Divider(
-                    thickness: 1,
-                    color: Colors.black,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Container(
+                        color: Colors.black,
+                        width: 150,
+                        height: 2,
+                        margin: EdgeInsets.only(left: 10.0, right: 10.0),
+                        child: Divider(),
+                      ),
+                      Text("Or"),
+                      Container(
+                          color: Colors.black,
+                          width: 150,
+                          height: 2,
+                          margin: EdgeInsets.only(left: 10.0, right: 10.0),
+                          child: Divider()),
+                    ],
                   ),
                   Container(
                     width: double.infinity,
@@ -209,7 +226,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                             height: 40,
                             width: 40,
                             child: Image.asset(
-                              "lib/assets/images/google.png",
+                              "lib/assets/images/googleLogo.png",
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -222,10 +239,12 @@ class SignUpScreenState extends State<SignUpScreen> {
                     children: [
                       Text("Alreday have an account?"),
                       TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.of(contx).pushReplacementNamed(
+                                LoginPageScreen.loginPageScreenRoute);
+                          },
                           child: Text(
                             "Login",
-                            style: TextStyle(fontSize: 20),
                           ))
                     ],
                   ),
