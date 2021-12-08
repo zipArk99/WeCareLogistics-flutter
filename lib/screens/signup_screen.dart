@@ -214,24 +214,26 @@ class SignUpScreenState extends State<SignUpScreen> {
                     ],
                   ),
                   Container(
-                    width: double.infinity,
                     height: 70,
-                    child: RaisedButton(
-                      color: Colors.white,
+                    width: double.infinity,
+                    child: ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.white,
+                      ),
                       onPressed: () {},
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Container(
-                            height: 40,
-                            width: 40,
-                            child: Image.asset(
-                              "lib/assets/images/googleLogo.png",
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          Text("Sign Up With Google"),
-                        ],
+                      icon: Container(
+                        width: 50,
+                        height: 50,
+                        child: Image.asset(
+                          "lib/assets/images/googleLogo.png",
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      label: Text(
+                        "Sign In With Google",
+                        style: TextStyle(
+                          color: Colors.black87,
+                        ),
                       ),
                     ),
                   ),

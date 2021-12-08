@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wecare_logistics/screens/login_screen.dart';
 import 'package:wecare_logistics/screens/signup_screen.dart';
+import 'package:wecare_logistics/screens/splash_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -10,7 +11,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: "WeCare",
       theme: ThemeData(primarySwatch: Colors.indigo, accentColor: Colors.amber),
-      home: LoginPageScreen(),
+      home: SplashScreen(),
       initialRoute: "/",
       routes: {
         myAppRoute: (contx) => MyApp(),

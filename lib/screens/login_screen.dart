@@ -163,12 +163,20 @@ class LoginPageScreenState extends State<LoginPageScreen> {
                   Container(
                     height: 70,
                     width: double.infinity,
-                    child: ElevatedButton(
+                    child: ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
                         primary: Colors.white,
                       ),
                       onPressed: () {},
-                      child: Text(
+                      icon: Container(
+                        width: 50,
+                        height: 50,
+                        child: Image.asset(
+                          "lib/assets/images/googleLogo.png",
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      label: Text(
                         "Sign In With Google",
                         style: TextStyle(
                           color: Colors.black87,
