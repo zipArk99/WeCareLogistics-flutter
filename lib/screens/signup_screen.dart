@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -13,17 +14,32 @@ class SignUpScreenState extends State<SignUpScreen> {
   BigInt? _phoneNo;
   String? _email;
   String? _password;
+  final _formKey = GlobalKey<FormState>();
 
   var _lastNameFocus = FocusNode();
   var _phoneNoFocus = FocusNode();
   var _emailFocus = FocusNode();
   var _passwordFocus = FocusNode();
 
+  void onSignUp(BuildContext contx) {
+    var validateSignUpForm = _formKey.currentState!.validate();
+    if (!validateSignUpForm) {
+      return;
+    }
+    _formKey.currentState!.save();
+    print("name::" + _firstName.toString());
+    print("name::" + _lastName.toString());
+    print("name::" + _phoneNo.toString());
+    print("name::" + _email.toString());
+    print("name::" + _password.toString());
+  }
+
   Widget build(BuildContext contx) {
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20),
+        padding: EdgeInsets.symmetric(horizontal: 15),
         child: Form(
+          key: _formKey,
           child: SingleChildScrollView(
             child: ConstrainedBox(
               constraints:
@@ -44,7 +60,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                   ),
                   Container(
                     height: 6,
-                    width: 300,
+                    width: double.infinity,
                     decoration: BoxDecoration(
                       color: Theme.of(contx).primaryColor,
                     ),
@@ -64,6 +80,15 @@ class SignUpScreenState extends State<SignUpScreen> {
                           onFieldSubmitted: (_) {
                             Focus.of(contx).requestFocus(_lastNameFocus);
                           },
+                          onSaved: (value) {
+                            _firstName = value;
+                          },
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return "Enter FirstName";
+                            }
+                            return null;
+                          },
                           textInputAction: TextInputAction.next,
                         ),
                       ),
@@ -80,6 +105,15 @@ class SignUpScreenState extends State<SignUpScreen> {
                             onFieldSubmitted: (_) {
                               Focus.of(contx).requestFocus(_phoneNoFocus);
                             },
+                            onSaved: (value) {
+                              _lastName = value;
+                            },
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return "Enter LastName";
+                              }
+                              return null;
+                            },
                             textInputAction: TextInputAction.next),
                       )
                     ],
@@ -92,6 +126,21 @@ class SignUpScreenState extends State<SignUpScreen> {
                       onFieldSubmitted: (_) {
                         Focus.of(contx).requestFocus(_emailFocus);
                       },
+                      onSaved: (value) {
+                        _phoneNo = BigInt.parse(value as String);
+                      },
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return "Enter PhoneNo";
+                        }
+                        if (value.length < 10) {
+                          return "Wrong Input";
+                        }
+                        if (BigInt.tryParse(value) == null) {
+                          return "Enter Digits 0-9";
+                        }
+                        return null;
+                      },
                       textInputAction: TextInputAction.next),
                   TextFormField(
                       decoration: InputDecoration(
@@ -102,19 +151,41 @@ class SignUpScreenState extends State<SignUpScreen> {
                       onFieldSubmitted: (_) {
                         Focus.of(contx).requestFocus(_passwordFocus);
                       },
+                      onSaved: (value) {
+                        _email = value;
+                      },
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return "Enter Email";
+                        }
+                        return null;
+                      },
                       textInputAction: TextInputAction.next),
                   TextFormField(
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: "Password",
-                      ),
-                      focusNode: _passwordFocus,
-                      textInputAction: TextInputAction.done),
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: "Password",
+                    ),
+                    focusNode: _passwordFocus,
+                    textInputAction: TextInputAction.done,
+                    onSaved: (value) {
+                      _password = value;
+                    },
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "Enter Password";
+                      }
+                      return null;
+                    },
+                  ),
                   Container(
                     width: double.infinity,
                     height: 70,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        onSignUp(contx);
+                        FocusScope.of(contx).unfocus();
+                      },
                       child: Text(
                         "SignUp",
                         style: TextStyle(),
@@ -131,9 +202,19 @@ class SignUpScreenState extends State<SignUpScreen> {
                     child: RaisedButton(
                       color: Colors.white,
                       onPressed: () {},
-                      child: Text(
-                        "Sign Up With Google",
-                        style: TextStyle(),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Container(
+                            height: 40,
+                            width: 40,
+                            child: Image.asset(
+                              "lib/assets/images/google.png",
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          Text("Sign Up With Google"),
+                        ],
                       ),
                     ),
                   ),
@@ -148,6 +229,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                           ))
                     ],
                   ),
+                  Text("T&C")
                 ],
               ),
             ),
