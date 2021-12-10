@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:wecare_logistics/screens/login_screen.dart';
+import 'package:wecare_logistics/screens/role_choice_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   static const String signUpScreenRoute = "/SignUpScreenRoute";
@@ -24,6 +25,8 @@ class SignUpScreenState extends State<SignUpScreen> {
   var _passwordFocus = FocusNode();
 
   void onSignUp(BuildContext contx) {
+    Navigator.of(contx)
+        .pushReplacementNamed(RoleChoiceScreen.roleChoiceScreeRoute);
     var validateSignUpForm = _formKey.currentState!.validate();
     if (!validateSignUpForm) {
       return;

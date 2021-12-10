@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wecare_logistics/screens/role_choice_screen.dart';
 import 'package:wecare_logistics/screens/signup_screen.dart';
 
 class LoginPageScreen extends StatefulWidget {
@@ -19,6 +20,8 @@ class LoginPageScreenState extends State<LoginPageScreen> {
   var _passwordFocus = FocusNode();
 
   void saveLogin() {
+    Navigator.of(context)
+        .pushReplacementNamed(RoleChoiceScreen.roleChoiceScreeRoute);
     var loginFormValiadtion = _loginForm.currentState!.validate();
     if (!loginFormValiadtion) {
       return;
