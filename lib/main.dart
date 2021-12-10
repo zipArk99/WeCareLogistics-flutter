@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wecare_logistics/screens/login_screen.dart';
 import 'package:wecare_logistics/screens/role_choice_screen.dart';
+import 'package:wecare_logistics/screens/sender%20screen/create_order_screen.dart';
 import 'package:wecare_logistics/screens/sender%20screen/sender_homepage_tab.dart';
 import 'package:wecare_logistics/screens/sender%20screen/sender_tabs.dart';
 import 'package:wecare_logistics/screens/signup_screen.dart';
@@ -24,6 +25,8 @@ class MyApp extends StatelessWidget {
         SenderHomePageScreen.senderHomePageScreenRoute: (contx) =>
             SenderHomePageScreen(),
         SenderTabs.senderTabsRoute: (contx) => SenderTabs(),
+        CreateOrderScreen.createOrderScreenRoute: (contx) =>
+            CreateOrderScreen(),
       },
     );
   }
