@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:wecare_logistics/models/order_model.dart';
 import 'package:wecare_logistics/screens/login_screen.dart';
 import 'package:wecare_logistics/screens/role_choice_screen.dart';
 import 'package:wecare_logistics/screens/sender%20screen/create_order_screen.dart';
@@ -12,22 +14,26 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   static const myAppRoute = "/MyAppRoute";
   Widget build(BuildContext contx) {
-    return MaterialApp(
-      title: "WeCare",
-      theme: ThemeData(primarySwatch: Colors.indigo, accentColor: Colors.amber),
-      home: SplashScreen(),
-      initialRoute: "/",
-      routes: {
-        myAppRoute: (contx) => MyApp(),
-        SignUpScreen.signUpScreenRoute: (contx) => SignUpScreen(),
-        LoginPageScreen.loginPageScreenRoute: (contx) => LoginPageScreen(),
-        RoleChoiceScreen.roleChoiceScreeRoute: (contx) => RoleChoiceScreen(),
-        SenderHomePageScreen.senderHomePageScreenRoute: (contx) =>
-            SenderHomePageScreen(),
-        SenderTabs.senderTabsRoute: (contx) => SenderTabs(),
-        CreateOrderScreen.createOrderScreenRoute: (contx) =>
-            CreateOrderScreen(),
-      },
+    return ChangeNotifierProvider(
+      create: (contx) => OrdersProvider(),
+      child: MaterialApp(
+        title: "WeCare",
+        theme:
+            ThemeData(primarySwatch: Colors.indigo, accentColor: Colors.amber),
+        home: SplashScreen(),
+        initialRoute: "/",
+        routes: {
+          myAppRoute: (contx) => MyApp(),
+          SignUpScreen.signUpScreenRoute: (contx) => SignUpScreen(),
+          LoginPageScreen.loginPageScreenRoute: (contx) => LoginPageScreen(),
+          RoleChoiceScreen.roleChoiceScreeRoute: (contx) => RoleChoiceScreen(),
+          SenderHomePageScreen.senderHomePageScreenRoute: (contx) =>
+              SenderHomePageScreen(),
+          SenderTabs.senderTabsRoute: (contx) => SenderTabs(),
+          CreateOrderScreen.createOrderScreenRoute: (contx) =>
+              CreateOrderScreen(),
+        },
+      ),
     );
   }
 }

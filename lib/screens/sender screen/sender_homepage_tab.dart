@@ -9,45 +9,44 @@ class SenderHomePageScreen extends StatelessWidget {
   static const String senderHomePageScreenRoute = "/SenderHomePageScreenRoute";
   @override
   Widget build(BuildContext contx) {
-    /*  OrdersProvider p1 = new OrdersProvider(); */
-    return ChangeNotifierProvider<OrdersProvider>(
-      create: (contx) {
-        return OrdersProvider();
-      },
-      child: Scaffold(
-        body: Column(
-          children: [
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-              height: 200,
-              child: Card(
-                child: Center(
-                  child: Text("Picture"),
-                ),
+    var order = Provider.of<OrdersProvider>(contx);
+    return Scaffold(
+      body: Column(
+        children: [
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+            height: 200,
+            child: Card(
+              child: Center(
+                child: Text("Picture"),
               ),
             ),
-            Text("Orders"),
-            Expanded(
-              child: Container(
-                margin: EdgeInsets.all(5),
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                child: ListView.builder(
-                  itemBuilder: (contx, index) {
-                    return OrdersWidget();
-                  },
-                  itemCount: 5,
-                ),
+          ),
+          Text("Orders"),
+          Expanded(
+            child: Container(
+              margin: EdgeInsets.all(5),
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              child: ListView.builder(
+                itemBuilder: (contx, index) {
+                  return OrdersWidget(
+                    orderTitle: order.getOrderList()[index].orderTitle,
+                    pickUpLocation: order.getOrderList()[index].pickUpLocation,
+                    dropLocation: order.getOrderList()[index].dropLocation,
+                  );
+                },
+                itemCount: order.getOrderList().length,
               ),
             ),
-          ],
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.of(contx)
-                .pushNamed(CreateOrderScreen.createOrderScreenRoute);
-          },
-          child: Icon(Icons.add),
-        ),
+          ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(contx)
+              .pushNamed(CreateOrderScreen.createOrderScreenRoute);
+        },
+        child: Icon(Icons.add),
       ),
     );
   }

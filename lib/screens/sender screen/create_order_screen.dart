@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:wecare_logistics/models/order_model.dart';
 
 class CreateOrderScreen extends StatefulWidget {
   static const String createOrderScreenRoute = "/CreateOrderScreenRoute";
@@ -14,6 +16,22 @@ class CreateOrderScreenState extends State<CreateOrderScreen> {
   var _form = GlobalKey<FormState>();
   var _isDateSelected = false;
   String? _selectedDate;
+
+  Order _newOrder = Order(
+      orderId: "",
+      orderTitle: "",
+      productCategory: "",
+      productQuantity: 0,
+      productPrice: 0,
+      orderLendth: 0,
+      orderBreadth: 0,
+      orderHeight: 0,
+      orderWeight: 0,
+      expectedDelivery: DateTime.now(),
+      pickUpLocation: "",
+      reciverName: "",
+      dropLocation: "",
+      pinCode: 0);
 
   var _pickUpFocus = FocusNode();
   var _reciverNameFocus = FocusNode();
@@ -42,29 +60,33 @@ class CreateOrderScreenState extends State<CreateOrderScreen> {
       });
     } else {
       setState(() {
-        _selectedDate = null;
+        _selectedDate = "";
         _isDateSelected = false;
       });
     }
   }
 
-  Widget createTextFormField(
-      {required BuildContext contx,
-      required String label,
-      TextInputType keyboard = TextInputType.text,
-      required FocusNode focus,
-      required FocusNode requestF,
-      required String? Function(String?) funValidate}) {
+  Widget createTextFormField({
+    required BuildContext contx,
+    required String label,
+    TextInputType keyboard = TextInputType.text,
+    required FocusNode focus,
+    required FocusNode requestF,
+    required String? Function(String?) funValidate,
+    required Function(String?) funSave,
+  }) {
     return TextFormField(
-        autovalidateMode: AutovalidateMode.always,
-        keyboardType: keyboard,
-        textInputAction: TextInputAction.next,
-        focusNode: focus,
-        decoration: InputDecoration(labelText: label),
-        onFieldSubmitted: (_) {
-          Focus.of(contx).requestFocus(requestF);
-        },
-        validator: funValidate);
+      autovalidateMode: AutovalidateMode.always,
+      keyboardType: keyboard,
+      textInputAction: TextInputAction.next,
+      focusNode: focus,
+      decoration: InputDecoration(labelText: label),
+      onFieldSubmitted: (_) {
+        Focus.of(contx).requestFocus(requestF);
+      },
+      validator: funValidate,
+      onSaved: funSave,
+    );
   }
 
   String? checkIsEmpty(String? value) {
@@ -74,10 +96,10 @@ class CreateOrderScreenState extends State<CreateOrderScreen> {
     return null;
   }
 
-  void onCreateOrder() {
+  void onCreateOrder(BuildContext contx) {
     var validate = _form.currentState!.validate();
 
-    if (!validate) {
+    if (!validate || !_isDateSelected) {
       showDialog(
           context: context,
           builder: (context) {
@@ -98,10 +120,19 @@ class CreateOrderScreenState extends State<CreateOrderScreen> {
           });
       return;
     }
+
+    _form.currentState!.save();
+
+    Provider.of<OrdersProvider>(contx, listen: false)
+        .addNewOrder(_newOrder, _selectedDate!);
+    print(_newOrder.orderHeight);
+    Navigator.of(context).pop();
   }
 
   @override
   Widget build(BuildContext contx) {
+    var orderProvider = Provider.of<OrdersProvider>(contx, listen: false);
+
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(80),
@@ -132,17 +163,19 @@ class CreateOrderScreenState extends State<CreateOrderScreen> {
                   style: TextStyle(fontSize: 20),
                 ),
                 createTextFormField(
-                  contx: contx,
-                  label: "PickUpLocation",
-                  focus: _pickUpFocus,
-                  requestF: _reciverNameFocus,
-                  funValidate: (value) {
-                    if (value!.isEmpty) {
-                      return "Empty Field!";
-                    }
-                    return null;
-                  },
-                ),
+                    contx: contx,
+                    label: "PickUpLocation",
+                    focus: _pickUpFocus,
+                    requestF: _reciverNameFocus,
+                    funValidate: (value) {
+                      if (value!.isEmpty) {
+                        return "Empty Field!";
+                      }
+                      return null;
+                    },
+                    funSave: (value) {
+                      _newOrder = orderProvider.copyWith(pickUpLocation: value);
+                    }),
                 createTextFormField(
                   contx: contx,
                   label: "Reciver Name",
@@ -153,6 +186,11 @@ class CreateOrderScreenState extends State<CreateOrderScreen> {
                       return "Empty Field!";
                     }
                     return null;
+                  },
+                  funSave: (value) {
+                    _newOrder = orderProvider.copyWith(
+                        pickUpLocation: _newOrder.pickUpLocation,
+                        reciverName: value);
                   },
                 ),
                 createTextFormField(
@@ -165,6 +203,12 @@ class CreateOrderScreenState extends State<CreateOrderScreen> {
                       return "Empty Field!";
                     }
                     return null;
+                  },
+                  funSave: (value) {
+                    _newOrder = orderProvider.copyWith(
+                        dropLocation: value,
+                        pickUpLocation: _newOrder.pickUpLocation,
+                        reciverName: _newOrder.reciverName);
                   },
                 ),
                 createTextFormField(
@@ -181,6 +225,13 @@ class CreateOrderScreenState extends State<CreateOrderScreen> {
                       return "6 digits pins";
                     }
                     return null;
+                  },
+                  funSave: (value) {
+                    _newOrder = orderProvider.copyWith(
+                        pinCode: int.parse(value as String),
+                        dropLocation: _newOrder.dropLocation,
+                        pickUpLocation: _newOrder.pickUpLocation,
+                        reciverName: _newOrder.reciverName);
                   },
                 ),
                 Padding(
@@ -203,11 +254,15 @@ class CreateOrderScreenState extends State<CreateOrderScreen> {
                           if (value!.isEmpty) {
                             return "Empty Field!";
                           }
-                          if (double.tryParse(value) == null ||
-                              int.tryParse(value) == null) {
-                            return "0";
-                          }
                           return null;
+                        },
+                        funSave: (value) {
+                          _newOrder = orderProvider.copyWith(
+                              orderLendth: double.parse(value as String),
+                              pinCode: _newOrder.pinCode,
+                              dropLocation: _newOrder.dropLocation,
+                              pickUpLocation: _newOrder.pickUpLocation,
+                              reciverName: _newOrder.reciverName);
                         },
                       ),
                     ),
@@ -231,6 +286,15 @@ class CreateOrderScreenState extends State<CreateOrderScreen> {
                           }
                           return null;
                         },
+                        funSave: (value) {
+                          _newOrder = orderProvider.copyWith(
+                              orderBreadth: double.parse(value as String),
+                              orderLendth: _newOrder.orderLendth,
+                              pinCode: _newOrder.pinCode,
+                              dropLocation: _newOrder.dropLocation,
+                              pickUpLocation: _newOrder.pickUpLocation,
+                              reciverName: _newOrder.reciverName);
+                        },
                       ),
                     ),
                     SizedBox(
@@ -253,6 +317,16 @@ class CreateOrderScreenState extends State<CreateOrderScreen> {
                           }
                           return null;
                         },
+                        funSave: (value) {
+                          _newOrder = orderProvider.copyWith(
+                              orderHeight: double.parse(value as String),
+                              orderBreadth: _newOrder.orderBreadth,
+                              orderLendth: _newOrder.orderLendth,
+                              pinCode: _newOrder.pinCode,
+                              dropLocation: _newOrder.dropLocation,
+                              pickUpLocation: _newOrder.pickUpLocation,
+                              reciverName: _newOrder.reciverName);
+                        },
                       ),
                     ),
                   ],
@@ -269,6 +343,17 @@ class CreateOrderScreenState extends State<CreateOrderScreen> {
                     }
                     return null;
                   },
+                  funSave: (value) {
+                    _newOrder = orderProvider.copyWith(
+                        orderWeight: double.parse(value as String),
+                        orderHeight: _newOrder.orderHeight,
+                        orderBreadth: _newOrder.orderBreadth,
+                        orderLendth: _newOrder.orderLendth,
+                        pinCode: _newOrder.pinCode,
+                        dropLocation: _newOrder.dropLocation,
+                        pickUpLocation: _newOrder.pickUpLocation,
+                        reciverName: _newOrder.reciverName);
+                  },
                 ),
                 createTextFormField(
                   contx: contx,
@@ -281,6 +366,18 @@ class CreateOrderScreenState extends State<CreateOrderScreen> {
                     }
                     return null;
                   },
+                  funSave: (value) {
+                    _newOrder = orderProvider.copyWith(
+                        orderTitle: value,
+                        orderWeight: _newOrder.orderWeight,
+                        orderHeight: _newOrder.orderHeight,
+                        orderBreadth: _newOrder.orderBreadth,
+                        orderLendth: _newOrder.orderLendth,
+                        pinCode: _newOrder.pinCode,
+                        dropLocation: _newOrder.dropLocation,
+                        pickUpLocation: _newOrder.pickUpLocation,
+                        reciverName: _newOrder.reciverName);
+                  },
                 ),
                 createTextFormField(
                   contx: contx,
@@ -292,6 +389,19 @@ class CreateOrderScreenState extends State<CreateOrderScreen> {
                       return "Empty Field!";
                     }
                     return null;
+                  },
+                  funSave: (value) {
+                    _newOrder = orderProvider.copyWith(
+                        productCategory: value,
+                        orderTitle: _newOrder.orderTitle,
+                        orderWeight: _newOrder.orderWeight,
+                        orderHeight: _newOrder.orderHeight,
+                        orderBreadth: _newOrder.orderBreadth,
+                        orderLendth: _newOrder.orderLendth,
+                        pinCode: _newOrder.pinCode,
+                        dropLocation: _newOrder.dropLocation,
+                        pickUpLocation: _newOrder.pickUpLocation,
+                        reciverName: _newOrder.reciverName);
                   },
                 ),
                 Row(
@@ -308,6 +418,20 @@ class CreateOrderScreenState extends State<CreateOrderScreen> {
                             return "Empty Field!";
                           }
                           return null;
+                        },
+                        funSave: (value) {
+                          _newOrder = orderProvider.copyWith(
+                              productPrice: double.parse(value as String),
+                              productCategory: _newOrder.productCategory,
+                              orderTitle: _newOrder.orderTitle,
+                              orderWeight: _newOrder.orderWeight,
+                              orderHeight: _newOrder.orderHeight,
+                              orderBreadth: _newOrder.orderBreadth,
+                              orderLendth: _newOrder.orderLendth,
+                              pinCode: _newOrder.pinCode,
+                              dropLocation: _newOrder.dropLocation,
+                              pickUpLocation: _newOrder.pickUpLocation,
+                              reciverName: _newOrder.reciverName);
                         },
                       ),
                     ),
@@ -333,6 +457,21 @@ class CreateOrderScreenState extends State<CreateOrderScreen> {
                             return "Empty Field!";
                           }
                           return null;
+                        },
+                        onSaved: (value) {
+                          _newOrder = orderProvider.copyWith(
+                              productQuantity: int.parse(value as String),
+                              productPrice: _newOrder.productPrice,
+                              productCategory: _newOrder.productCategory,
+                              orderTitle: _newOrder.orderTitle,
+                              orderWeight: _newOrder.orderWeight,
+                              orderHeight: _newOrder.orderHeight,
+                              orderBreadth: _newOrder.orderBreadth,
+                              orderLendth: _newOrder.orderLendth,
+                              pinCode: _newOrder.pinCode,
+                              dropLocation: _newOrder.dropLocation,
+                              pickUpLocation: _newOrder.pickUpLocation,
+                              reciverName: _newOrder.reciverName);
                         },
                       ),
                     ),
@@ -385,7 +524,7 @@ class CreateOrderScreenState extends State<CreateOrderScreen> {
                   height: 50,
                   child: ElevatedButton(
                     onPressed: () {
-                      onCreateOrder();
+                      onCreateOrder(contx);
                     },
                     child: Text("Create Order"),
                   ),
