@@ -31,6 +31,7 @@ class CreateOrderScreenState extends State<CreateOrderScreen> {
       pickUpLocation: "",
       reciverName: "",
       dropLocation: "",
+      orderCreatedOn: DateTime.now(),
       pinCode: 0);
 
   var _pickUpFocus = FocusNode();
@@ -76,11 +77,12 @@ class CreateOrderScreenState extends State<CreateOrderScreen> {
     required Function(String?) funSave,
   }) {
     return TextFormField(
-      autovalidateMode: AutovalidateMode.always,
       keyboardType: keyboard,
       textInputAction: TextInputAction.next,
       focusNode: focus,
-      decoration: InputDecoration(labelText: label),
+      decoration: InputDecoration(
+        labelText: label,
+      ),
       onFieldSubmitted: (_) {
         Focus.of(contx).requestFocus(requestF);
       },

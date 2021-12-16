@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
+import 'package:uuid/uuid.dart';
 
 class Order {
   final String orderId;
@@ -16,6 +17,7 @@ class Order {
   final String reciverName;
   final String dropLocation;
   final int pinCode;
+  final DateTime orderCreatedOn;
   bool published;
 
   Order({
@@ -33,6 +35,7 @@ class Order {
     required this.reciverName,
     required this.dropLocation,
     required this.pinCode,
+    required this.orderCreatedOn,
     this.published = false,
   });
 }
@@ -42,6 +45,10 @@ class OrdersProvider with ChangeNotifier {
 
   List<Order> getOrderList() {
     return [..._ordersList];
+  }
+
+  Order getSingleOrder(String id) {
+    return getOrderList().singleWhere((element) => element.orderId == id);
   }
 
   Order copyWith(
@@ -59,6 +66,7 @@ class OrdersProvider with ChangeNotifier {
       String? reciverName,
       String? dropLocation,
       int? pinCode,
+      DateTime? orderCreatedOn,
       bool? published}) {
     return Order(
         orderId: orderId ?? "",
@@ -75,13 +83,15 @@ class OrdersProvider with ChangeNotifier {
         reciverName: reciverName ?? "",
         dropLocation: dropLocation ?? "",
         pinCode: pinCode ?? 0,
+        orderCreatedOn: orderCreatedOn ?? DateTime.now(),
         published: published ?? false);
   }
 
   void addNewOrder(Order newOrder, String deliveryDate) {
+    var uuid = Uuid();
     var order = Order(
       published: newOrder.published,
-      orderId: DateTime.now().toString(),
+      orderId: uuid.v4(),
       orderTitle: newOrder.orderTitle,
       productCategory: newOrder.productCategory,
       productQuantity: newOrder.productQuantity,
@@ -94,9 +104,15 @@ class OrdersProvider with ChangeNotifier {
       pickUpLocation: newOrder.pickUpLocation,
       reciverName: newOrder.reciverName,
       dropLocation: newOrder.dropLocation,
+      orderCreatedOn: DateTime.now(),
       pinCode: newOrder.pinCode,
     );
     _ordersList.add(order);
+    notifyListeners();
+  }
+
+  void deleteOrder(String id) {
+    _ordersList.removeWhere((element) => element.orderId == id);
     notifyListeners();
   }
 }

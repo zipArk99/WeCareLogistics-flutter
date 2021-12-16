@@ -4,6 +4,7 @@ import 'package:wecare_logistics/models/order_model.dart';
 import 'package:wecare_logistics/screens/login_screen.dart';
 import 'package:wecare_logistics/screens/role_choice_screen.dart';
 import 'package:wecare_logistics/screens/sender%20screen/create_order_screen.dart';
+import 'package:wecare_logistics/screens/sender%20screen/order_detail_screen.dart';
 import 'package:wecare_logistics/screens/sender%20screen/sender_homepage_tab.dart';
 import 'package:wecare_logistics/screens/sender%20screen/sender_tabs.dart';
 import 'package:wecare_logistics/screens/signup_screen.dart';
@@ -32,6 +33,8 @@ class MyApp extends StatelessWidget {
           SenderTabs.senderTabsRoute: (contx) => SenderTabs(),
           CreateOrderScreen.createOrderScreenRoute: (contx) =>
               CreateOrderScreen(),
+          OrderDetailScreen.OrderDetailScreenRoute: (contx) =>
+              OrderDetailScreen(),
         },
       ),
     );
