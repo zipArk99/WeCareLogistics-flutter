@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-
 import 'package:provider/provider.dart';
-import 'package:wecare_logistics/models/order_model.dart';
-import 'package:wecare_logistics/widgets/sender_appbar.dart';
+import 'package:wecare_logistics/sender/models/bids_model.dart';
+import 'package:wecare_logistics/sender/models/order_model.dart';
+import 'package:wecare_logistics/sender/widgets/bid_widget.dart';
+import 'package:wecare_logistics/sender/widgets/sender_appbar.dart';
 
 class OrderDetailScreen extends StatelessWidget {
   static const String OrderDetailScreenRoute = "/OrderDetailScreenRoute";
@@ -359,24 +360,58 @@ class OrderDetailScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(
-                height: 80,
-              )
+              if (order.published != true)
+                SizedBox(
+                  height: 80,
+                ),
+              if (order.published == true)
+                Container(
+                  padding: EdgeInsets.symmetric(vertical: 5),
+                  child: Text(
+                    "Bids Response",
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+                  ),
+                ),
+              if (order.published == true)
+                ChangeNotifierProvider(
+                  create: (contx) => BidsProvider(),
+                  child: Consumer<BidsProvider>(
+                    builder: (contx, bids, child) {
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemBuilder: (contx, index) {
+                          return BidWidget(
+                            price: order.bids[index].bidPrice.toString(),
+                          );
+                        },
+                        itemCount: order.bids.length,
+                      );
+                    },
+                  ),
+                )
             ],
           ),
         ),
       ),
       floatingActionButtonLocation:
           FloatingActionButtonLocation.miniCenterDocked,
-      floatingActionButton: Container(
-        margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        width: double.infinity,
-        height: 70,
-        child: ElevatedButton(
-          onPressed: () {},
-          child: Text("Publish"),
-        ),
-      ),
+      floatingActionButton: order.published == true
+          ? null
+          : Container(
+              color: Colors.white,
+              margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              width: double.infinity,
+              height: 70,
+              child: ElevatedButton(
+                onPressed: () {
+                  Provider.of<OrdersProvider>(contx, listen: false)
+                      .publishOrder(orderId);
+                  Navigator.of(contx).pop();
+                },
+                child: Text("Publish"),
+              ),
+            ),
     );
   }
 }

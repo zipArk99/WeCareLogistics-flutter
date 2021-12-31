@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:wecare_logistics/models/order_model.dart';
+import 'package:wecare_logistics/sender/models/order_model.dart';
+import 'package:wecare_logistics/sender/widgets/sender_appbar.dart';
 
 class CreateOrderScreen extends StatefulWidget {
   static const String createOrderScreenRoute = "/CreateOrderScreenRoute";
@@ -138,18 +139,7 @@ class CreateOrderScreenState extends State<CreateOrderScreen> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(80),
-        child: AppBar(
-          centerTitle: true,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-              bottomRight: Radius.circular(40),
-              bottomLeft: Radius.circular(40),
-            ),
-          ),
-          title: Text(
-            "Create Shipment",
-          ),
-        ),
+        child: SenderAppBar(barTitle: "Create Order"),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),

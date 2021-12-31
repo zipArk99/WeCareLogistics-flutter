@@ -2,8 +2,11 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:wecare_logistics/models/order_model.dart';
-import 'package:wecare_logistics/screens/sender%20screen/order_detail_screen.dart';
+import 'package:wecare_logistics/sender/models/bids_model.dart';
+
+import 'package:wecare_logistics/sender/models/order_model.dart';
+
+import 'package:wecare_logistics/sender/screens/order_detail_screen.dart';
 
 class OrdersWidget extends StatelessWidget {
   final String orderId = Random().nextInt(1000).toString();
@@ -25,6 +28,7 @@ class OrdersWidget extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         child: ListTile(
           onTap: () {
+            ChangeNotifierProvider(create: (contx) => BidsProvider());
             Navigator.of(contx).pushNamed(
               OrderDetailScreen.OrderDetailScreenRoute,
               arguments: id,

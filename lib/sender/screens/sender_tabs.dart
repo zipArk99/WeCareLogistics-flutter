@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:wecare_logistics/drawer/drawer_screen.dart';
-import 'package:wecare_logistics/screens/sender%20screen/sender_homepage_tab.dart';
-import 'package:wecare_logistics/screens/sender%20screen/sender_publishedOrder_tab.dart';
-import 'package:wecare_logistics/widgets/sender_appbar.dart';
+import 'package:wecare_logistics/sender/drawer/drawer_screen.dart';
+
+import 'package:wecare_logistics/sender/screens/sender_homepage_tab.dart';
+import 'package:wecare_logistics/sender/screens/sender_publishedOrder_tab.dart';
+import 'package:wecare_logistics/sender/widgets/sender_appbar.dart';
 
 class SenderTabs extends StatefulWidget {
   static const senderTabsRoute = "/SenderTabsRoute";

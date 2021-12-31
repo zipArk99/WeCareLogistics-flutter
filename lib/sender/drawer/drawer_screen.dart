@@ -1,10 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:wecare_logistics/sender/screens/send_yourorder_tab.dart';
+import 'package:wecare_logistics/sender/screens/sender_homepage_tab.dart';
+import 'package:wecare_logistics/sender/screens/sender_tabs.dart';
+import 'package:wecare_logistics/sender/screens/user_profile.dart';
 
 class DrawerScreen extends StatelessWidget {
-  Widget getListTile(IconData icon, String drawerTitle) {
+  Widget getListTile({
+    required BuildContext contx,
+    required IconData icon,
+    required String drawerTitle,
+    String navigationString = "",
+  }) {
     return Container(
       child: ListTile(
-        onTap: () {},
+        onTap: () {
+          if (navigationString != "") {
+            Navigator.of(contx).pushReplacementNamed(navigationString);
+          }
+        },
         leading: Icon(
           icon,
           size: 30,
@@ -60,36 +73,75 @@ class DrawerScreen extends StatelessWidget {
                 ],
               ),
             ),
-            getListTile(Icons.account_circle, "User Profile"),
+            getListTile(
+              icon: Icons.account_circle,
+              drawerTitle: "User Profile",
+              contx: contx,
+              navigationString: UserProfile.userProfileRoute,
+            ),
             Divider(
               thickness: 1,
             ),
-            getListTile(Icons.shopping_cart_outlined, "Your Orders"),
+            getListTile(
+              icon: Icons.save_rounded,
+              drawerTitle: "Saved Orders",
+              contx: contx,
+              navigationString: SenderTabs.senderTabsRoute,
+            ),
             Divider(
               thickness: 1,
             ),
-            getListTile(Icons.settings, "Settings"),
+            getListTile(
+              icon: Icons.shopping_cart_outlined,
+              drawerTitle: "Your Orders",
+              contx: contx,
+              navigationString: SenderYourOrderTabs.senderYourOrderTabsRoute,
+            ),
             Divider(
               thickness: 1,
             ),
-            getListTile(Icons.notifications, "Notification"),
+            getListTile(
+              icon: Icons.settings,
+              drawerTitle: "Settings",
+              contx: contx,
+            ),
             Divider(
               thickness: 1,
             ),
-            getListTile(Icons.help_center, "Help Center"),
+            getListTile(
+              icon: Icons.notifications,
+              drawerTitle: "Notification",
+              contx: contx,
+            ),
             Divider(
               thickness: 1,
             ),
-            getListTile(Icons.phone, "Contact Us"),
+            getListTile(
+              icon: Icons.help_center,
+              drawerTitle: "Help Center",
+              contx: contx,
+            ),
             Divider(
               thickness: 1,
             ),
-            getListTile(Icons.contact_mail_sharp, "Settings"),
+            getListTile(
+              icon: Icons.phone,
+              drawerTitle: "Contact Us",
+              contx: contx,
+            ),
+            Divider(
+              thickness: 1,
+            ),
+            getListTile(
+              icon: Icons.contact_mail_sharp,
+              drawerTitle: "Settings",
+              contx: contx,
+            ),
             Divider(
               thickness: 1,
             ),
             Padding(
-              padding: const EdgeInsets.all(30),
+              padding: const EdgeInsets.all(5),
               child: TextButton(
                 onPressed: () {},
                 style: ButtonStyle(

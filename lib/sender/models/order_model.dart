@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
+import 'package:wecare_logistics/sender/models/bids_model.dart';
 
 class Order {
   final String orderId;
@@ -18,7 +19,10 @@ class Order {
   final String dropLocation;
   final int pinCode;
   final DateTime orderCreatedOn;
+  List<Bid> bids;
   bool published;
+  bool bidSelected;
+  bool orderCompleted;
 
   Order({
     required this.orderId,
@@ -36,20 +40,50 @@ class Order {
     required this.dropLocation,
     required this.pinCode,
     required this.orderCreatedOn,
+    this.bids = const [],
     this.published = false,
+    this.bidSelected = false,
+    this.orderCompleted = false,
   });
 }
 
 class OrdersProvider with ChangeNotifier {
-  List<Order> _ordersList = [];
-
-  List<Order> getOrderList() {
-    return [..._ordersList];
-  }
-
-  Order getSingleOrder(String id) {
-    return getOrderList().singleWhere((element) => element.orderId == id);
-  }
+  List<Order> _ordersList = [
+    Order(
+      orderId: Uuid().v4(),
+      orderTitle: "Tshirt",
+      productCategory: "Clothing",
+      productQuantity: 2,
+      productPrice: 200,
+      orderLendth: 100,
+      orderBreadth: 100,
+      orderHeight: 50,
+      orderWeight: 10,
+      expectedDelivery: DateTime.now(),
+      pickUpLocation: "Ahmedabad",
+      reciverName: "Shaun",
+      dropLocation: "mumbai",
+      pinCode: 380015,
+      orderCreatedOn: DateTime.now(),
+    ),
+    Order(
+        orderId: Uuid().v4(),
+        orderTitle: "Tshirt",
+        productCategory: "Clothing",
+        productQuantity: 2,
+        productPrice: 200,
+        orderLendth: 100,
+        orderBreadth: 100,
+        orderHeight: 50,
+        orderWeight: 10,
+        expectedDelivery: DateTime.now(),
+        pickUpLocation: "Ahmedabad",
+        reciverName: "Shaun",
+        dropLocation: "mumbai",
+        pinCode: 380015,
+        orderCreatedOn: DateTime.now(),
+        published: false),
+  ];
 
   Order copyWith(
       {String? orderId,
@@ -111,8 +145,43 @@ class OrdersProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  List<Order> getOrderList() {
+    List<Order> order = [];
+
+    _ordersList.forEach((element) {
+      if (element.published == false) {
+        order.add(element);
+      }
+    });
+
+    return order;
+  }
+
+  List<Order> getPublishedOrderList() {
+    List<Order> publishedOrders = [];
+
+    _ordersList.forEach((element) {
+      if (element.published == true) {
+        publishedOrders.add(element);
+      }
+    });
+
+    return publishedOrders;
+  }
+
+  Order getSingleOrder(String id) {
+    return _ordersList.singleWhere((element) => element.orderId == id);
+  }
+
   void deleteOrder(String id) {
     _ordersList.removeWhere((element) => element.orderId == id);
+    notifyListeners();
+  }
+
+  void publishOrder(String id) {
+    var order = _ordersList.firstWhere((element) => element.orderId == id);
+    order.published = !order.published;
+
     notifyListeners();
   }
 }

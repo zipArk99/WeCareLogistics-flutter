@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:wecare_logistics/sender/models/order_model.dart';
 
-import 'package:wecare_logistics/models/order_model.dart';
-import 'package:wecare_logistics/screens/sender%20screen/create_order_screen.dart';
-import 'package:wecare_logistics/widgets/order_widget.dart';
+import 'package:wecare_logistics/sender/widgets/order_widget.dart';
+
+import 'create_order_screen.dart';
 
 class SenderHomePageScreen extends StatelessWidget {
   static const String senderHomePageScreenRoute = "/SenderHomePageScreenRoute";

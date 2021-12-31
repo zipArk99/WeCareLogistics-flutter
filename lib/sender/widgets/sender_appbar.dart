@@ -16,12 +16,19 @@ class SenderAppBar extends StatelessWidget {
       centerTitle: true,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
-          bottomRight: Radius.circular(40),
-          bottomLeft: Radius.circular(40),
+          bottomRight: Radius.circular(30),
+          bottomLeft: Radius.circular(30),
         ),
       ),
       title: Text(barTitle),
       actions: [
+        Padding(
+          padding: const EdgeInsets.all(10),
+          child: IconButton(
+            onPressed: () {},
+            icon: Icon(Icons.account_balance_wallet_sharp),
+          ),
+        ),
         Padding(
           padding: const EdgeInsets.all(10),
           child: IconButton(

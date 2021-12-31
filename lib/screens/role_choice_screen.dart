@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-
-import 'package:wecare_logistics/screens/sender%20screen/sender_tabs.dart';
+import 'package:flutter/widgets.dart';
+import 'package:wecare_logistics/CourierService/screens/courier_homepage.dart';
+import 'package:wecare_logistics/sender/screens/sender_tabs.dart';
 
 class RoleChoiceScreen extends StatelessWidget {
   static const String roleChoiceScreeRoute = "/RoleChoiceScreenRoute";
@@ -42,7 +43,10 @@ class RoleChoiceScreen extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   primary: Colors.orange.shade800,
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(contx).pushNamed(
+                      CourierServiceHomePage.courierServiceHomePageRoute);
+                },
                 icon: Icon(Icons.people),
                 label: Text(
                   "Sign up as Courier Service",
