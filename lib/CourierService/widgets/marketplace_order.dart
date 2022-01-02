@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wecare_logistics/CourierService/widgets/place_bid.dart';
 
 class MarketPlaceOrderWidget extends StatelessWidget {
+  var bid = new BottomSheetWidget();
   TextStyle standarFont() {
     return TextStyle(
       fontSize: 11,
@@ -18,7 +19,6 @@ class MarketPlaceOrderWidget extends StatelessWidget {
         child: Column(
           children: [
             ListTile(
-              tileColor: Colors.amber,
               leading: Container(
                   child: Icon(
                 Icons.location_on,
@@ -59,6 +59,7 @@ class MarketPlaceOrderWidget extends StatelessWidget {
               thickness: 1,
             ),
             Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Expanded(
                   flex: 3,
@@ -143,7 +144,9 @@ class MarketPlaceOrderWidget extends StatelessWidget {
                               fit: BoxFit.cover,
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            bid.openPlaceBidBottomModelSheet(contx);
+                          },
                           label: Text("Bid"),
                         ),
                       )

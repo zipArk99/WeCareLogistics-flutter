@@ -17,7 +17,7 @@ class MarketPlaceTab extends StatelessWidget {
         itemBuilder: (contx, index) {
           return MarketPlaceOrderWidget();
         },
-        itemCount: 2,
+        itemCount: 1,
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
