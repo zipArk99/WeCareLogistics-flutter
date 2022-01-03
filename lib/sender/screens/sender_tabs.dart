@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:wecare_logistics/drawer/drawer_screen.dart';
-import 'package:wecare_logistics/screens/sender%20screen/sender_homepage_tab.dart';
-import 'package:wecare_logistics/screens/sender%20screen/sender_publishedOrder_tab.dart';
+import 'package:wecare_logistics/sender/drawer/drawer_screen.dart';
+
+import 'package:wecare_logistics/sender/screens/sender_homepage_tab.dart';
+import 'package:wecare_logistics/sender/screens/sender_publishedOrder_tab.dart';
+import 'package:wecare_logistics/sender/widgets/sender_appbar.dart';
 
 class SenderTabs extends StatefulWidget {
   static const senderTabsRoute = "/SenderTabsRoute";
@@ -32,23 +34,8 @@ class _SenderTabsState extends State<SenderTabs> {
         drawer: DrawerScreen(),
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(80),
-          child: AppBar(
-            centerTitle: true,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                bottomRight: Radius.circular(40),
-                bottomLeft: Radius.circular(40),
-              ),
-            ),
-            title: Text("WeCare"),
-            actions: [
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: IconButton(
-                    onPressed: () {}, icon: Icon(Icons.notifications_on_sharp)),
-              )
-            ],
-          ),
+          child: SenderAppBar(
+              barTitle: "WeCare", color: Theme.of(contx).primaryColor),
         ),
         body: _tabs[_selectedIndex],
         bottomNavigationBar: BottomNavigationBar(
