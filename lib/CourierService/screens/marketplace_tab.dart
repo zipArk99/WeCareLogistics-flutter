@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wecare_logistics/CourierService/screens/courier_myprofile.dart';
 import 'package:wecare_logistics/CourierService/screens/courierservise_registration_screen.dart';
 import 'package:wecare_logistics/CourierService/widgets/marketplace_order.dart';
 
@@ -21,8 +22,7 @@ class MarketPlaceTab extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(contx).pushNamed(
-              CourierRegistrationScreen.courierRegistrationScreenRoute);
+          Navigator.of(contx).pushNamed(CourierMyProfile.courierMyProfileRoute);
         },
         child: Icon(Icons.app_registration),
       ),

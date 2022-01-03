@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:wecare_logistics/CourierService/screens/courier_homepage.dart';
+import 'package:wecare_logistics/CourierService/screens/courier_myprofile.dart';
 import 'package:wecare_logistics/CourierService/screens/courierservise_registration_screen.dart';
 import 'package:wecare_logistics/screens/login_screen.dart';
 import 'package:wecare_logistics/screens/role_choice_screen.dart';
@@ -51,6 +52,7 @@ class MyApp extends StatelessWidget {
               CourierServiceHomePage(),
           CourierRegistrationScreen.courierRegistrationScreenRoute: (contx) =>
               CourierRegistrationScreen(),
+          CourierMyProfile.courierMyProfileRoute: (contx) => CourierMyProfile(),
         },
       ),
     );
