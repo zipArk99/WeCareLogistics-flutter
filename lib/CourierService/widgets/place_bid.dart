@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
+import 'package:wecare_logistics/models/bids_model.dart';
+import 'package:wecare_logistics/models/order_model.dart';
+import 'package:wecare_logistics/models/user.dart';
 
 class BottomSheetWidget {
-  void openPlaceBidBottomModelSheet(BuildContext contx) {
+  BottomSheetWidget({required BuildContext contx, required String orderId}) {
     showModalBottomSheet(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
@@ -11,12 +16,16 @@ class BottomSheetWidget {
         ),
         context: contx,
         builder: (contx) {
-          return PlaceBidBottomModelSheetWidget();
+          return PlaceBidBottomModelSheetWidget(
+            orderId: orderId,
+          );
         });
   }
 }
 
 class PlaceBidBottomModelSheetWidget extends StatefulWidget {
+  String orderId;
+  PlaceBidBottomModelSheetWidget({required this.orderId});
   @override
   State<StatefulWidget> createState() {
     return PlaceBidBottomModelSheetWidgetState();
@@ -25,69 +34,88 @@ class PlaceBidBottomModelSheetWidget extends StatefulWidget {
 
 class PlaceBidBottomModelSheetWidgetState
     extends State<PlaceBidBottomModelSheetWidget> {
-  var intiValue;
-  var selectedDate;
-  double? bidPrice;
+  var _intiModeValue;
+  var _selectedDate;
+  double? _bidPrice;
   var _formKey = GlobalKey<FormState>();
+
+  void changeItem(Object? value) {
+    setState(() {
+      _intiModeValue = value.toString();
+    });
+  }
+
+  void confirmBid(BuildContext contx) {
+    print("called");
+    bool validate = _formKey.currentState!.validate();
+    if (!validate || _selectedDate == null) {
+      return;
+    }
+
+    _formKey.currentState!.save();
+    var user = Provider.of<UserProvider>(contx, listen: false).getUser();
+
+    showDialog(
+        context: contx,
+        builder: (contx) {
+          return AlertDialog(
+            content: Text("Confirm Your Bid ?"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(contx).pop();
+                },
+                child: Text("Cancel"),
+              ),
+              TextButton(
+                onPressed: () {
+                  Bid bid = Bid(
+                      bidId: Uuid().v4(),
+                      courierId: user.id,
+                      bidPrice: _bidPrice as double,
+                      bidExpectedDeliveryDate: _selectedDate,
+                      modeOfTransport: _intiModeValue.toString(),
+                      bidcreatedOn: DateTime.now());
+                  try {
+                    Provider.of<OrdersProvider>(context, listen: false)
+                        .addBidToOrder(widget.orderId, bid)
+                        .then((value) {
+                      Navigator.of(contx).pop();
+                      Navigator.of(contx).pop();
+                    });
+                  } catch (error) {
+                    print("this is the error::" + error.toString());
+                  }
+                },
+                child: Text("Confirm"),
+              ),
+            ],
+          );
+        });
+  }
+
+  Future<void> selectDeliveryDate(BuildContext contx) async {
+    var date = await showDatePicker(
+        context: contx,
+        initialDate: DateTime.now(),
+        firstDate: DateTime.now(),
+        lastDate: DateTime(2023));
+
+    if (date == null) {
+      setState(() {
+        _selectedDate = null;
+        return;
+      });
+    }
+
+    setState(() {
+      _selectedDate = date;
+      date = null;
+    });
+  }
 
   @override
   Widget build(BuildContext contx) {
-    void changeItem(Object? value) {
-      setState(() {
-        intiValue = value.toString();
-      });
-    }
-
-    void confirmBid(BuildContext contx) {
-      print("called");
-      bool validate = _formKey.currentState!.validate();
-      if (!validate || selectedDate == null) {
-        return;
-      }
-
-      _formKey.currentState!.save();
-
-      showDialog(
-          context: contx,
-          builder: (contx) {
-            return AlertDialog(
-              content: Text("Confirm Your Bid ?"),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(contx).pop();
-                  },
-                  child: Text("Cancel"),
-                ),
-                TextButton(
-                  onPressed: () {},
-                  child: Text("Confirm"),
-                ),
-              ],
-            );
-          });
-    }
-
-    Future<void> selectDeliveryDate(BuildContext contx) async {
-      var date = await showDatePicker(
-          context: contx,
-          initialDate: DateTime.now(),
-          firstDate: DateTime.now(),
-          lastDate: DateTime(2023));
-
-      if (date == null) {
-        setState(() {
-          selectedDate = null;
-          return;
-        });
-      }
-
-      setState(() {
-        selectedDate = date;
-        date = null;
-      });
-    }
-
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -103,7 +131,7 @@ class PlaceBidBottomModelSheetWidgetState
                       decoration: InputDecoration(
                           border: OutlineInputBorder(), labelText: "Bid Price"),
                       onSaved: (value) {
-                        bidPrice = double.parse(value.toString());
+                        _bidPrice = double.parse(value.toString());
                       },
                       validator: (value) {
                         if (value!.isEmpty) {
@@ -122,7 +150,7 @@ class PlaceBidBottomModelSheetWidgetState
                       onChanged: (value) {
                         changeItem(value);
                       },
-                      value: intiValue,
+                      value: _intiModeValue,
                       items: ['Road', 'Air', 'Rail']
                           .map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
@@ -151,8 +179,8 @@ class PlaceBidBottomModelSheetWidgetState
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                selectedDate != null
-                    ? Text(selectedDate.toString())
+                _selectedDate != null
+                    ? Text(_selectedDate.toString())
                     : Text("No Date Selected"),
                 TextButton(
                   onPressed: () {

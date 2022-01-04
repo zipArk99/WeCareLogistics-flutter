@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
-import 'package:wecare_logistics/sender/models/bids_model.dart';
+import 'package:wecare_logistics/models/bids_model.dart';
 
 class Order {
   final String orderId;
@@ -64,6 +64,7 @@ class OrdersProvider with ChangeNotifier {
       reciverName: "Shaun",
       dropLocation: "mumbai",
       pinCode: 380015,
+      bids: [],
       orderCreatedOn: DateTime.now(),
     ),
     Order(
@@ -81,44 +82,49 @@ class OrdersProvider with ChangeNotifier {
         reciverName: "Shaun",
         dropLocation: "mumbai",
         pinCode: 380015,
+        bids: [],
         orderCreatedOn: DateTime.now(),
         published: false),
   ];
 
-  Order copyWith(
-      {String? orderId,
-      String? orderTitle,
-      String? productCategory,
-      int? productQuantity,
-      double? productPrice,
-      double? orderLendth,
-      double? orderBreadth,
-      double? orderHeight,
-      double? orderWeight,
-      DateTime? expectedDelivery,
-      String? pickUpLocation,
-      String? reciverName,
-      String? dropLocation,
-      int? pinCode,
-      DateTime? orderCreatedOn,
-      bool? published}) {
+  Order copyWith({
+    String? orderId,
+    String? orderTitle,
+    String? productCategory,
+    int? productQuantity,
+    double? productPrice,
+    double? orderLendth,
+    double? orderBreadth,
+    double? orderHeight,
+    double? orderWeight,
+    DateTime? expectedDelivery,
+    String? pickUpLocation,
+    String? reciverName,
+    String? dropLocation,
+    int? pinCode,
+    DateTime? orderCreatedOn,
+    bool? published,
+    /*  List<Bid>? bid */
+  }) {
     return Order(
-        orderId: orderId ?? "",
-        orderTitle: orderTitle ?? " ",
-        productCategory: productCategory ?? "",
-        productQuantity: productQuantity ?? 0,
-        productPrice: productPrice ?? 0,
-        orderLendth: orderLendth ?? 0,
-        orderBreadth: orderBreadth ?? 0,
-        orderHeight: orderHeight ?? 0,
-        orderWeight: orderWeight ?? 0,
-        expectedDelivery: expectedDelivery ?? DateTime.now(),
-        pickUpLocation: pickUpLocation ?? "",
-        reciverName: reciverName ?? "",
-        dropLocation: dropLocation ?? "",
-        pinCode: pinCode ?? 0,
-        orderCreatedOn: orderCreatedOn ?? DateTime.now(),
-        published: published ?? false);
+      orderId: orderId ?? "",
+      orderTitle: orderTitle ?? " ",
+      productCategory: productCategory ?? "",
+      productQuantity: productQuantity ?? 0,
+      productPrice: productPrice ?? 0,
+      orderLendth: orderLendth ?? 0,
+      orderBreadth: orderBreadth ?? 0,
+      orderHeight: orderHeight ?? 0,
+      orderWeight: orderWeight ?? 0,
+      expectedDelivery: expectedDelivery ?? DateTime.now(),
+      pickUpLocation: pickUpLocation ?? "",
+      reciverName: reciverName ?? "",
+      dropLocation: dropLocation ?? "",
+      pinCode: pinCode ?? 0,
+      orderCreatedOn: orderCreatedOn ?? DateTime.now(),
+      published: published ?? false,
+      /*  bids:bid ?? [] */
+    );
   }
 
   void addNewOrder(Order newOrder, String deliveryDate) {
@@ -170,7 +176,22 @@ class OrdersProvider with ChangeNotifier {
   }
 
   Order getSingleOrder(String id) {
-    return _ordersList.singleWhere((element) => element.orderId == id);
+    /*   _ordersList.forEach((element) {
+      print("order id::" + element.orderId);
+    }); */
+
+    print("publish order list length::" +
+        getPublishedOrderList().length.toString());
+    getPublishedOrderList().forEach((element) {
+      print("orderId::" + element.orderId);
+    });
+
+    try {
+      return _ordersList.singleWhere((element) => element.orderId == id);
+    } catch (error) {
+      print("error found::" + error.toString());
+    }
+    throw 1;
   }
 
   void deleteOrder(String id) {
@@ -183,5 +204,11 @@ class OrdersProvider with ChangeNotifier {
     order.published = !order.published;
 
     notifyListeners();
+  }
+
+  Future<void> addBidToOrder(String id, Bid bid) async {
+    Order order = getSingleOrder(id);
+    order.bids.add(bid);
+    ChangeNotifier();
   }
 }

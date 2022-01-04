@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:wecare_logistics/sender/models/order_model.dart';
+import 'package:wecare_logistics/models/order_model.dart';
 import 'package:wecare_logistics/sender/widgets/sender_appbar.dart';
 
 class CreateOrderScreen extends StatefulWidget {
@@ -452,18 +452,19 @@ class CreateOrderScreenState extends State<CreateOrderScreen> {
                         },
                         onSaved: (value) {
                           _newOrder = orderProvider.copyWith(
-                              productQuantity: int.parse(value as String),
-                              productPrice: _newOrder.productPrice,
-                              productCategory: _newOrder.productCategory,
-                              orderTitle: _newOrder.orderTitle,
-                              orderWeight: _newOrder.orderWeight,
-                              orderHeight: _newOrder.orderHeight,
-                              orderBreadth: _newOrder.orderBreadth,
-                              orderLendth: _newOrder.orderLendth,
-                              pinCode: _newOrder.pinCode,
-                              dropLocation: _newOrder.dropLocation,
-                              pickUpLocation: _newOrder.pickUpLocation,
-                              reciverName: _newOrder.reciverName);
+                            productQuantity: int.parse(value as String),
+                            productPrice: _newOrder.productPrice,
+                            productCategory: _newOrder.productCategory,
+                            orderTitle: _newOrder.orderTitle,
+                            orderWeight: _newOrder.orderWeight,
+                            orderHeight: _newOrder.orderHeight,
+                            orderBreadth: _newOrder.orderBreadth,
+                            orderLendth: _newOrder.orderLendth,
+                            pinCode: _newOrder.pinCode,
+                            dropLocation: _newOrder.dropLocation,
+                            pickUpLocation: _newOrder.pickUpLocation,
+                            reciverName: _newOrder.reciverName,
+                          );
                         },
                       ),
                     ),

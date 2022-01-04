@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 class BidWidget extends StatelessWidget {
   final String price;
-  BidWidget({required this.price});
+  final bool isCourierService;
+  BidWidget({required this.price, required this.isCourierService});
 
   @override
   Widget build(BuildContext contx) {
@@ -14,11 +15,17 @@ class BidWidget extends StatelessWidget {
         child: Column(
           children: [
             ListTile(
-              title: Text(
-                "WeCare Transport",
-                style: TextStyle(
-                  color: Theme.of(contx).primaryColor,
-                  decoration: TextDecoration.underline,
+              title: Container(
+                alignment: Alignment.topLeft,
+                child: TextButton(
+                  onPressed: () {},
+                  child: Text(
+                    "WeCare Transport",
+                    style: TextStyle(
+                      color: Theme.of(contx).primaryColor,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
                 ),
               ),
               subtitle: Text("Ahmedabad,GJ"),
@@ -103,17 +110,18 @@ class BidWidget extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Container(
-                    width: 150,
-                    height: 40,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.green,
+                  if (!isCourierService)
+                    Container(
+                      width: 150,
+                      height: 40,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.green,
+                        ),
+                        onPressed: () {},
+                        child: Text("Accept"),
                       ),
-                      onPressed: () {},
-                      child: Text("Accept"),
                     ),
-                  ),
                 ],
               ),
             ),

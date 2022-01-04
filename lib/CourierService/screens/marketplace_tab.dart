@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:wecare_logistics/CourierService/screens/courier_myprofile.dart';
-import 'package:wecare_logistics/CourierService/screens/courierservise_registration_screen.dart';
+import 'package:provider/provider.dart';
 import 'package:wecare_logistics/CourierService/widgets/marketplace_order.dart';
+import 'package:wecare_logistics/models/bids_model.dart';
+import 'package:wecare_logistics/models/order_model.dart';
 
 class MarketPlaceTab extends StatelessWidget {
   TextStyle standarFont() {
@@ -13,19 +14,45 @@ class MarketPlaceTab extends StatelessWidget {
 /* #919191 */
   @override
   Widget build(BuildContext contx) {
+    var publishOrderList =
+        Provider.of<OrdersProvider>(contx).getPublishedOrderList();
     return Scaffold(
-      body: ListView.builder(
-        itemBuilder: (contx, index) {
-          return MarketPlaceOrderWidget();
-        },
-        itemCount: 1,
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(contx).pushNamed(CourierMyProfile.courierMyProfileRoute);
-        },
-        child: Icon(Icons.app_registration),
-      ),
+      body: publishOrderList.isEmpty
+          ? Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 80),
+                child: Column(
+                  children: [
+                    Text(
+                      "No Orders!",
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Theme.of(contx).errorColor,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      width: 150,
+                      height: 150,
+                      child: Image.asset(
+                        'lib/assets/images/waiting.png',
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          : ListView.builder(
+              itemBuilder: (contx, index) {
+                return MarketPlaceOrderWidget(
+                  publishOrderId: publishOrderList[index].orderId,
+                );
+              },
+              itemCount: publishOrderList.length,
+            ),
     );
   }
 }

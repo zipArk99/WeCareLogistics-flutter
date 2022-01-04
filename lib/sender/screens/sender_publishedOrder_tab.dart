@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:wecare_logistics/sender/models/order_model.dart';
+import 'package:wecare_logistics/models/order_model.dart';
 import 'package:wecare_logistics/sender/widgets/order_widget.dart';
 
 class PublishedOrderTab extends StatelessWidget {

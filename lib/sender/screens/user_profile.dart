@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:wecare_logistics/sender/drawer/drawer_screen.dart';
-import 'package:wecare_logistics/sender/widgets/sender_appbar.dart';
 
 class UserProfile extends StatefulWidget {
   static const String userProfileRoute = "/UserProfileRoute";

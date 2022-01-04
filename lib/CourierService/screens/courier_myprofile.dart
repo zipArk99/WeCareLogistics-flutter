@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wecare_logistics/CourierService/drawer/courier_drawer.dart';
 import 'package:wecare_logistics/CourierService/widgets/courier_appbar.dart';
 import 'package:wecare_logistics/CourierService/widgets/courier_review.dart';
 
@@ -29,6 +30,7 @@ class CourierMyProfile extends StatelessWidget {
   @override
   Widget build(BuildContext contx) {
     return Scaffold(
+      drawer: CourierDrawer(),
       appBar: PreferredSize(
         child: CourierAppBar(
           barTitle: "My Profile",
@@ -68,6 +70,7 @@ class CourierMyProfile extends StatelessWidget {
                               ),
                               myProfileImpDetails("Experience", "5 Years"),
                               myProfileImpDetails("Branch", "2"),
+                              myProfileImpDetails("Based", "Ahmedabad"),
                             ],
                           ),
                         ),
