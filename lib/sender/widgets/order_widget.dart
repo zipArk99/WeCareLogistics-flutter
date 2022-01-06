@@ -16,10 +16,13 @@ class OrdersWidget extends StatelessWidget {
   final String dropLocation;
 
   OrdersWidget(
-      {required this.id,
+      {required Key key,
+      required this.id,
       required this.orderTitle,
       required this.pickUpLocation,
-      required this.dropLocation});
+      required this.dropLocation})
+      : super(key: key);
+
   @override
   Widget build(BuildContext contx) {
     return Card(

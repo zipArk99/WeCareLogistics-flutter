@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
           create: (contx) => OrdersProvider(),
         ),
         ChangeNotifierProvider(create: (contx) => UserProvider()),
-        /* ChangeNotifierProvider(create: (_) => BidsProvider()), */
+        ChangeNotifierProvider(create: (_) => BidsProvider()),
       ],
       child: MaterialApp(
         title: "WeCare",

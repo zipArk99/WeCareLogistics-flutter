@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:wecare_logistics/CourierService/widgets/marketplace_order.dart';
 import 'package:wecare_logistics/models/bids_model.dart';
 import 'package:wecare_logistics/models/order_model.dart';
+import 'package:wecare_logistics/models/user.dart';
 
 class MarketPlaceTab extends StatelessWidget {
   TextStyle standarFont() {
@@ -16,8 +17,10 @@ class MarketPlaceTab extends StatelessWidget {
   Widget build(BuildContext contx) {
     var publishOrderList =
         Provider.of<OrdersProvider>(contx).getPublishedOrderList();
+    var publishOrders = Provider.of<BidsProvider>(contx).checkUserBid(contx);
+
     return Scaffold(
-      body: publishOrderList.isEmpty
+      body: publishOrders.isEmpty
           ? Center(
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 80),
@@ -48,10 +51,10 @@ class MarketPlaceTab extends StatelessWidget {
           : ListView.builder(
               itemBuilder: (contx, index) {
                 return MarketPlaceOrderWidget(
-                  publishOrderId: publishOrderList[index].orderId,
+                  publishOrderId: publishOrders[index].orderId,
                 );
               },
-              itemCount: publishOrderList.length,
+              itemCount: publishOrders.length,
             ),
     );
   }

@@ -58,6 +58,7 @@ class SenderHomePageScreen extends StatelessWidget {
                       child: ListView.builder(
                         itemBuilder: (contx, index) {
                           return OrdersWidget(
+                            key: Key(order.getOrderList()[index].orderId),
                             id: order.getOrderList()[index].orderId,
                             orderTitle: order.getOrderList()[index].orderTitle,
                             pickUpLocation:

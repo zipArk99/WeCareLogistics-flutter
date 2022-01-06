@@ -87,44 +87,42 @@ class OrdersProvider with ChangeNotifier {
         published: false),
   ];
 
-  Order copyWith({
-    String? orderId,
-    String? orderTitle,
-    String? productCategory,
-    int? productQuantity,
-    double? productPrice,
-    double? orderLendth,
-    double? orderBreadth,
-    double? orderHeight,
-    double? orderWeight,
-    DateTime? expectedDelivery,
-    String? pickUpLocation,
-    String? reciverName,
-    String? dropLocation,
-    int? pinCode,
-    DateTime? orderCreatedOn,
-    bool? published,
-    /*  List<Bid>? bid */
-  }) {
+  Order copyWith(
+      {String? orderId,
+      String? orderTitle,
+      String? productCategory,
+      int? productQuantity,
+      double? productPrice,
+      double? orderLendth,
+      double? orderBreadth,
+      double? orderHeight,
+      double? orderWeight,
+      DateTime? expectedDelivery,
+      String? pickUpLocation,
+      String? reciverName,
+      String? dropLocation,
+      int? pinCode,
+      DateTime? orderCreatedOn,
+      bool? published,
+      List<Bid>? bid}) {
     return Order(
-      orderId: orderId ?? "",
-      orderTitle: orderTitle ?? " ",
-      productCategory: productCategory ?? "",
-      productQuantity: productQuantity ?? 0,
-      productPrice: productPrice ?? 0,
-      orderLendth: orderLendth ?? 0,
-      orderBreadth: orderBreadth ?? 0,
-      orderHeight: orderHeight ?? 0,
-      orderWeight: orderWeight ?? 0,
-      expectedDelivery: expectedDelivery ?? DateTime.now(),
-      pickUpLocation: pickUpLocation ?? "",
-      reciverName: reciverName ?? "",
-      dropLocation: dropLocation ?? "",
-      pinCode: pinCode ?? 0,
-      orderCreatedOn: orderCreatedOn ?? DateTime.now(),
-      published: published ?? false,
-      /*  bids:bid ?? [] */
-    );
+        orderId: orderId ?? "",
+        orderTitle: orderTitle ?? " ",
+        productCategory: productCategory ?? "",
+        productQuantity: productQuantity ?? 0,
+        productPrice: productPrice ?? 0,
+        orderLendth: orderLendth ?? 0,
+        orderBreadth: orderBreadth ?? 0,
+        orderHeight: orderHeight ?? 0,
+        orderWeight: orderWeight ?? 0,
+        expectedDelivery: expectedDelivery ?? DateTime.now(),
+        pickUpLocation: pickUpLocation ?? "",
+        reciverName: reciverName ?? "",
+        dropLocation: dropLocation ?? "",
+        pinCode: pinCode ?? 0,
+        orderCreatedOn: orderCreatedOn ?? DateTime.now(),
+        published: published ?? false,
+        bids: bid ?? []);
   }
 
   void addNewOrder(Order newOrder, String deliveryDate) {
@@ -146,6 +144,7 @@ class OrdersProvider with ChangeNotifier {
       dropLocation: newOrder.dropLocation,
       orderCreatedOn: DateTime.now(),
       pinCode: newOrder.pinCode,
+      bids: newOrder.bids,
     );
     _ordersList.add(order);
     notifyListeners();
@@ -204,11 +203,5 @@ class OrdersProvider with ChangeNotifier {
     order.published = !order.published;
 
     notifyListeners();
-  }
-
-  Future<void> addBidToOrder(String id, Bid bid) async {
-    Order order = getSingleOrder(id);
-    order.bids.add(bid);
-    ChangeNotifier();
   }
 }

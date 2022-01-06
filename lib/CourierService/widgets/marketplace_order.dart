@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wecare_logistics/CourierService/widgets/place_bid.dart';
+import 'package:wecare_logistics/models/bids_model.dart';
 
 import 'package:wecare_logistics/models/order_model.dart';
 import 'package:wecare_logistics/models/user.dart';
@@ -32,8 +33,8 @@ class MarketPlaceOrderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext contx) {
-    var order = Provider.of<OrdersProvider>(contx, listen: false)
-        .getSingleOrder(publishOrderId);
+    var order =
+        Provider.of<OrdersProvider>(contx).getSingleOrder(publishOrderId);
     print("checkBidedOrNot::" + checkBidedOrNot(contx).toString());
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 13, vertical: 20),
@@ -52,6 +53,7 @@ class MarketPlaceOrderWidget extends StatelessWidget {
           child: Column(
             children: [
               ListTile(
+                tileColor: Colors.amber,
                 leading: Container(
                     child: Icon(
                   Icons.location_on,
@@ -163,35 +165,45 @@ class MarketPlaceOrderWidget extends StatelessWidget {
                             ),
                           ],
                         ),
-                        Container(
-                          height: 50,
-                          width: double.infinity,
-                          margin: EdgeInsets.symmetric(
-                              vertical: 18, horizontal: 15),
-                          child: checkBidedOrNot(contx)
-                              ? ElevatedButton.icon(
-                                  icon: Icon(Icons.mode_edit_outline_rounded),
-                                  onPressed: () {
-                                    BottomSheetWidget(
-                                        contx: contx, orderId: order.orderId);
-                                  },
-                                  label: Text("Edit"),
-                                )
-                              : ElevatedButton.icon(
-                                  icon: Container(
-                                    height: 20,
-                                    width: 20,
-                                    child: Image.asset(
-                                      'lib/assets/images/auction.png',
-                                      fit: BoxFit.cover,
+                        Consumer<BidsProvider>(
+                          builder: (contx, bid, child) {
+                            return Container(
+                              height: 50,
+                              width: double.infinity,
+                              margin: EdgeInsets.symmetric(
+                                  vertical: 18, horizontal: 15),
+                              child: checkBidedOrNot(contx)
+                                  ? ElevatedButton.icon(
+                                      icon:
+                                          Icon(Icons.mode_edit_outline_rounded),
+                                      onPressed: () {
+                                        BottomSheetWidget(
+                                          contx: contx,
+                                          orderId: order.orderId,
+                                          isEdit: true,
+                                        );
+                                      },
+                                      label: Text("Edit"),
+                                    )
+                                  : ElevatedButton.icon(
+                                      icon: Container(
+                                        height: 20,
+                                        width: 20,
+                                        child: Image.asset(
+                                          'lib/assets/images/auction.png',
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        BottomSheetWidget(
+                                          contx: contx,
+                                          orderId: order.orderId,
+                                        );
+                                      },
+                                      label: Text("Bid"),
                                     ),
-                                  ),
-                                  onPressed: () {
-                                    BottomSheetWidget(
-                                        contx: contx, orderId: order.orderId);
-                                  },
-                                  label: Text("Bid"),
-                                ),
+                            );
+                          },
                         )
                       ],
                     ),
