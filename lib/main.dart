@@ -17,6 +17,7 @@ import 'package:wecare_logistics/screens/order_detail_screen.dart';
 import 'package:wecare_logistics/sender/screens/send_yourorder_tab.dart';
 import 'package:wecare_logistics/sender/screens/sender_homepage_tab.dart';
 import 'package:wecare_logistics/sender/screens/sender_tabs.dart';
+import 'package:wecare_logistics/sender/screens/sender_wallet.dart';
 import 'package:wecare_logistics/sender/screens/user_profile.dart';
 
 void main() => runApp(MyApp());
@@ -54,6 +55,8 @@ class MyApp extends StatelessWidget {
           SenderYourOrderTabs.senderYourOrderTabsRoute: (contx) =>
               SenderYourOrderTabs(),
           UserProfile.userProfileRoute: (contx) => UserProfile(),
+          SenderWallet.senderWalletRoute: (contx) => SenderWallet(),
+
           //-----------------------------------------------------------
 
           //Courier Service Routes

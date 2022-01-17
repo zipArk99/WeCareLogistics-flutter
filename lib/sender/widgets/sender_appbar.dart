@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wecare_logistics/sender/screens/sender_wallet.dart';
 
 class SenderAppBar extends StatelessWidget {
   final String barTitle;
@@ -22,13 +23,16 @@ class SenderAppBar extends StatelessWidget {
       ),
       title: Text(barTitle),
       actions: [
-        Padding(
-          padding: const EdgeInsets.all(10),
-          child: IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.account_balance_wallet_sharp),
+        if (barTitle != 'Wallet')
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: IconButton(
+              onPressed: () {
+                Navigator.of(contx).pushNamed(SenderWallet.senderWalletRoute);
+              },
+              icon: Icon(Icons.account_balance_wallet_sharp),
+            ),
           ),
-        ),
         Padding(
           padding: const EdgeInsets.all(10),
           child: IconButton(
