@@ -61,7 +61,7 @@ class SenderWallet extends StatelessWidget {
                 ),
                 child: Container(
                   width: double.infinity,
-                  color: Colors.indigo.shade600,
+                  color: Colors.amber.shade300,
                   child: Column(
                     children: [
                       Padding(
@@ -70,7 +70,6 @@ class SenderWallet extends StatelessWidget {
                           "Last Transactions",
                           style: TextStyle(
                             fontSize: 16,
-                            color: Colors.white,
                             fontWeight: FontWeight.w500,
                           ),
                         ),

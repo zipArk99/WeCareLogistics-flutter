@@ -1,12 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:wecare_logistics/models/order_model.dart';
+import 'package:wecare_logistics/models/transaction_model.dart';
+import 'package:wecare_logistics/models/user.dart';
 
 class BidWidget extends StatelessWidget {
+  final Order order;
+  final String courierServiceId;
+  final String modeOfTransport;
+  final DateTime bidExpectedDeliveryDate;
   final String price;
   final bool isCourierService;
-  BidWidget({required this.price, required this.isCourierService});
+  BidWidget(
+      {required this.order,
+      required this.courierServiceId,
+      required this.price,
+      required this.modeOfTransport,
+      required this.bidExpectedDeliveryDate,
+      required this.isCourierService});
 
   @override
   Widget build(BuildContext contx) {
+    var senderId = Provider.of<UserProvider>(contx).getSenderUser2().id;
     print("price:::::" + price);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
@@ -64,7 +79,7 @@ class BidWidget extends StatelessWidget {
                 ),
               ),
               title: Text(
-                "Shipment cost ~ 200rs/-",
+                "Shipment cost ~ ${price}",
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
               ),
               subtitle: Text(
@@ -105,7 +120,7 @@ class BidWidget extends StatelessWidget {
                                     topRight: Radius.circular(20)), */
                       ),
                       child: Text(
-                        "Modes of transport~Road",
+                        "Modes of transport~ " + modeOfTransport,
                         style: TextStyle(fontSize: 12),
                       ),
                     ),
@@ -118,7 +133,39 @@ class BidWidget extends StatelessWidget {
                         style: ElevatedButton.styleFrom(
                           primary: Colors.green,
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          showDialog(
+                            context: contx,
+                            builder: (contx) {
+                              return AlertDialog(
+                                content: Text("Confirm Bid ?"),
+                                actions: [
+                                  TextButton(
+                                      onPressed: () {
+                                        Navigator.of(contx).pop();
+                                      },
+                                      child: Text("Cancel")),
+                                  TextButton(
+                                      onPressed: () {
+                                        Provider.of<TransactionProvider>(contx,
+                                                listen: false)
+                                            .addTransaction(
+                                          senderId: senderId,
+                                          courierServiceId: courierServiceId,
+                                          orderId: order.orderId,
+                                          transactionAmount:
+                                              double.parse(price),
+                                        );
+                                        Provider.of<OrdersProvider>(contx,
+                                                listen: false)
+                                            .ifBidSelected(order);
+                                      },
+                                      child: Text("Confirm")),
+                                ],
+                              );
+                            },
+                          );
+                        },
                         child: Text("Accept"),
                       ),
                     ),

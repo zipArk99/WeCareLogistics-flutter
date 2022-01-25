@@ -1,3 +1,4 @@
+/* import 'package:firebase_auth/firebase_auth.dart'; */
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:wecare_logistics/screens/login_screen.dart';
@@ -17,6 +18,8 @@ class SignUpScreenState extends State<SignUpScreen> {
   BigInt? _phoneNo;
   String? _email;
   String? _password;
+/*   FirebaseAuth auth = FirebaseAuth.instance; */
+
   final _formKey = GlobalKey<FormState>();
 
   var _lastNameFocus = FocusNode();
@@ -187,9 +190,23 @@ class SignUpScreenState extends State<SignUpScreen> {
                     width: double.infinity,
                     height: 70,
                     child: ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         onSignUp(contx);
                         FocusScope.of(contx).unfocus();
+                        /*   try {
+                          var userAuth =
+                              await auth.createUserWithEmailAndPassword(
+                                  email: _email as String,
+                                  password: _password as String);
+                        } on FirebaseAuthException catch (error) {
+                          if (error.code == 'weak-password') {
+                            print(error.code);
+                          } else if (error.code == 'email-already-in-use') {
+                            print(error.code);
+                          }
+                        } catch (error) {
+                          print(error);
+                        } */
                       },
                       child: Text(
                         "SignUp",

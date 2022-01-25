@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:wecare_logistics/CourierService/widgets/marketplace_order.dart';
 import 'package:wecare_logistics/models/bids_model.dart';
 import 'package:wecare_logistics/models/order_model.dart';
-import 'package:wecare_logistics/models/user.dart';
 
 class MarketPlaceTab extends StatelessWidget {
   TextStyle standarFont() {

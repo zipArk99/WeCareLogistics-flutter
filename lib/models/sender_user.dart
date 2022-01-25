@@ -1,8 +1,26 @@
-import 'package:wecare_logistics/models/user.dart';
+/* import 'package:wecare_logistics/models/user.dart';
 
 class SenderUser extends User {
-  final double walletBalance;
+  String senderFirstName;
+  String senderLastName;
+  int senderPhoneNo;
+  String address;
+  int savedOrders;
+  int publishedOrders;
+  int activeOrders;
+  int completedOrders;
+  double walletBalance;
 
-  SenderUser({required String firstName, required this.walletBalance})
-      : super(firstName: firstName);
+  SenderUser({
+    required this.senderFirstName,
+    required this.senderLastName,
+    required this.senderPhoneNo,
+    this.address = "",
+    this.savedOrders = 0,
+    this.publishedOrders = 0,
+    this.activeOrders = 0,
+    this.completedOrders = 0,
+    this.walletBalance = 0.0,
+  });
 }
+ */

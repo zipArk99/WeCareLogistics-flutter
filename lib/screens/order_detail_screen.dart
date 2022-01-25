@@ -384,7 +384,12 @@ class OrderDetailScreen extends StatelessWidget {
                         physics: NeverScrollableScrollPhysics(),
                         itemBuilder: (contx, index) {
                           return BidWidget(
+                            order: order,
+                            courierServiceId: order.bids[index].courierId,
                             price: order.bids[index].bidPrice.toString(),
+                            modeOfTransport: order.bids[index].modeOfTransport,
+                            bidExpectedDeliveryDate:
+                                order.bids[index].bidExpectedDeliveryDate,
                             isCourierService: isCourierService,
                           );
                         },

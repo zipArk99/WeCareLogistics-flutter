@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+
 import 'package:wecare_logistics/CourierService/drawer/courier_drawer.dart';
 import 'package:wecare_logistics/CourierService/screens/marketplace_tab.dart';
 import 'package:wecare_logistics/CourierService/screens/mybids_tab.dart';
 import 'package:wecare_logistics/CourierService/widgets/courier_appbar.dart';
-import 'package:wecare_logistics/models/bids_model.dart';
 
 class CourierServiceHomePage extends StatefulWidget {
   static const String courierServiceHomePageRoute =

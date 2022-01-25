@@ -5,6 +5,7 @@ import 'package:wecare_logistics/CourierService/screens/courier_homepage.dart';
 import 'package:wecare_logistics/CourierService/screens/courier_myprofile.dart';
 import 'package:wecare_logistics/CourierService/screens/courier_yourorder.dart';
 import 'package:wecare_logistics/CourierService/screens/courierservise_registration_screen.dart';
+import 'package:wecare_logistics/models/transaction_model.dart';
 import 'package:wecare_logistics/models/user.dart';
 import 'package:wecare_logistics/screens/login_screen.dart';
 import 'package:wecare_logistics/screens/role_choice_screen.dart';
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(create: (contx) => UserProvider()),
         ChangeNotifierProvider(create: (_) => BidsProvider()),
+        ChangeNotifierProvider(create: (_) => TransactionProvider()),
       ],
       child: MaterialApp(
         title: "WeCare",

@@ -32,6 +32,8 @@ dependencies:
   intl: ^0.17.0
   uuid: ^3.0.5
   flutter_rating_bar: ^4.0.0
+  #cloud_firestore: ^3.1.6
+  #firebase_auth: ^3.3.5
 
 dev_dependencies:
   flutter_test:

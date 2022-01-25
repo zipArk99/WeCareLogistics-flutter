@@ -166,7 +166,7 @@ class OrdersProvider with ChangeNotifier {
     List<Order> publishedOrders = [];
 
     _ordersList.forEach((element) {
-      if (element.published == true) {
+      if (element.published == true && element.bidSelected == false) {
         publishedOrders.add(element);
       }
     });
@@ -202,6 +202,11 @@ class OrdersProvider with ChangeNotifier {
     var order = _ordersList.firstWhere((element) => element.orderId == id);
     order.published = !order.published;
 
+    notifyListeners();
+  }
+
+  void ifBidSelected(Order order) {
+    order.bidSelected = true;
     notifyListeners();
   }
 }
