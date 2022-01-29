@@ -70,7 +70,7 @@ class _CourierReviewState extends State<CourierReview> {
                   padding: const EdgeInsets.all(15),
                   child: Container(
                     child: Text(
-                      "hello how are you i am doing all fine what is going in your country right now",
+                      "Great Service",
                       style: TextStyle(fontSize: 15),
                     ),
                   ),

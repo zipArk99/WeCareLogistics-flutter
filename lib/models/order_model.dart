@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
-import 'package:wecare_logistics/sender/models/bids_model.dart';
+import 'package:wecare_logistics/models/bids_model.dart';
 
 class Order {
   final String orderId;
@@ -64,6 +64,7 @@ class OrdersProvider with ChangeNotifier {
       reciverName: "Shaun",
       dropLocation: "mumbai",
       pinCode: 380015,
+      bids: [],
       orderCreatedOn: DateTime.now(),
     ),
     Order(
@@ -81,6 +82,7 @@ class OrdersProvider with ChangeNotifier {
         reciverName: "Shaun",
         dropLocation: "mumbai",
         pinCode: 380015,
+        bids: [],
         orderCreatedOn: DateTime.now(),
         published: false),
   ];
@@ -101,7 +103,8 @@ class OrdersProvider with ChangeNotifier {
       String? dropLocation,
       int? pinCode,
       DateTime? orderCreatedOn,
-      bool? published}) {
+      bool? published,
+      List<Bid>? bid}) {
     return Order(
         orderId: orderId ?? "",
         orderTitle: orderTitle ?? " ",
@@ -118,7 +121,8 @@ class OrdersProvider with ChangeNotifier {
         dropLocation: dropLocation ?? "",
         pinCode: pinCode ?? 0,
         orderCreatedOn: orderCreatedOn ?? DateTime.now(),
-        published: published ?? false);
+        published: published ?? false,
+        bids: bid ?? []);
   }
 
   void addNewOrder(Order newOrder, String deliveryDate) {
@@ -140,6 +144,7 @@ class OrdersProvider with ChangeNotifier {
       dropLocation: newOrder.dropLocation,
       orderCreatedOn: DateTime.now(),
       pinCode: newOrder.pinCode,
+      bids: newOrder.bids,
     );
     _ordersList.add(order);
     notifyListeners();
@@ -161,7 +166,7 @@ class OrdersProvider with ChangeNotifier {
     List<Order> publishedOrders = [];
 
     _ordersList.forEach((element) {
-      if (element.published == true) {
+      if (element.published == true && element.bidSelected == false) {
         publishedOrders.add(element);
       }
     });
@@ -170,7 +175,22 @@ class OrdersProvider with ChangeNotifier {
   }
 
   Order getSingleOrder(String id) {
-    return _ordersList.singleWhere((element) => element.orderId == id);
+    /*   _ordersList.forEach((element) {
+      print("order id::" + element.orderId);
+    }); */
+
+    print("publish order list length::" +
+        getPublishedOrderList().length.toString());
+    getPublishedOrderList().forEach((element) {
+      print("orderId::" + element.orderId);
+    });
+
+    try {
+      return _ordersList.singleWhere((element) => element.orderId == id);
+    } catch (error) {
+      print("error found::" + error.toString());
+    }
+    throw 1;
   }
 
   void deleteOrder(String id) {
@@ -182,6 +202,11 @@ class OrdersProvider with ChangeNotifier {
     var order = _ordersList.firstWhere((element) => element.orderId == id);
     order.published = !order.published;
 
+    notifyListeners();
+  }
+
+  void ifBidSelected(Order order) {
+    order.bidSelected = true;
     notifyListeners();
   }
 }

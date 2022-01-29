@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:wecare_logistics/sender/models/order_model.dart';
+import 'package:wecare_logistics/models/order_model.dart';
 import 'package:wecare_logistics/sender/widgets/sender_appbar.dart';
 
 class CreateOrderScreen extends StatefulWidget {
@@ -77,18 +77,22 @@ class CreateOrderScreenState extends State<CreateOrderScreen> {
     required String? Function(String?) funValidate,
     required Function(String?) funSave,
   }) {
-    return TextFormField(
-      keyboardType: keyboard,
-      textInputAction: TextInputAction.next,
-      focusNode: focus,
-      decoration: InputDecoration(
-        labelText: label,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: TextFormField(
+        keyboardType: keyboard,
+        textInputAction: TextInputAction.next,
+        focusNode: focus,
+        decoration: InputDecoration(
+          border: OutlineInputBorder(),
+          labelText: label,
+        ),
+        onFieldSubmitted: (_) {
+          Focus.of(contx).requestFocus(requestF);
+        },
+        validator: funValidate,
+        onSaved: funSave,
       ),
-      onFieldSubmitted: (_) {
-        Focus.of(contx).requestFocus(requestF);
-      },
-      validator: funValidate,
-      onSaved: funSave,
     );
   }
 
@@ -440,7 +444,10 @@ class CreateOrderScreenState extends State<CreateOrderScreen> {
                         keyboardType: TextInputType.number,
                         textInputAction: TextInputAction.done,
                         focusNode: _quantityFocus,
-                        decoration: InputDecoration(labelText: "Qyt"),
+                        decoration: InputDecoration(
+                          labelText: "Qyt",
+                          border: OutlineInputBorder(),
+                        ),
                         onFieldSubmitted: (_) {
                           opendDatePicker();
                         },
@@ -452,18 +459,19 @@ class CreateOrderScreenState extends State<CreateOrderScreen> {
                         },
                         onSaved: (value) {
                           _newOrder = orderProvider.copyWith(
-                              productQuantity: int.parse(value as String),
-                              productPrice: _newOrder.productPrice,
-                              productCategory: _newOrder.productCategory,
-                              orderTitle: _newOrder.orderTitle,
-                              orderWeight: _newOrder.orderWeight,
-                              orderHeight: _newOrder.orderHeight,
-                              orderBreadth: _newOrder.orderBreadth,
-                              orderLendth: _newOrder.orderLendth,
-                              pinCode: _newOrder.pinCode,
-                              dropLocation: _newOrder.dropLocation,
-                              pickUpLocation: _newOrder.pickUpLocation,
-                              reciverName: _newOrder.reciverName);
+                            productQuantity: int.parse(value as String),
+                            productPrice: _newOrder.productPrice,
+                            productCategory: _newOrder.productCategory,
+                            orderTitle: _newOrder.orderTitle,
+                            orderWeight: _newOrder.orderWeight,
+                            orderHeight: _newOrder.orderHeight,
+                            orderBreadth: _newOrder.orderBreadth,
+                            orderLendth: _newOrder.orderLendth,
+                            pinCode: _newOrder.pinCode,
+                            dropLocation: _newOrder.dropLocation,
+                            pickUpLocation: _newOrder.pickUpLocation,
+                            reciverName: _newOrder.reciverName,
+                          );
                         },
                       ),
                     ),

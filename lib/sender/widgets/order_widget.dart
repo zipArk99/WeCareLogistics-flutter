@@ -2,11 +2,11 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:wecare_logistics/sender/models/bids_model.dart';
+import 'package:wecare_logistics/models/bids_model.dart';
 
-import 'package:wecare_logistics/sender/models/order_model.dart';
+import 'package:wecare_logistics/models/order_model.dart';
 
-import 'package:wecare_logistics/sender/screens/order_detail_screen.dart';
+import 'package:wecare_logistics/screens/order_detail_screen.dart';
 
 class OrdersWidget extends StatelessWidget {
   final String orderId = Random().nextInt(1000).toString();
@@ -16,10 +16,13 @@ class OrdersWidget extends StatelessWidget {
   final String dropLocation;
 
   OrdersWidget(
-      {required this.id,
+      {required Key key,
+      required this.id,
       required this.orderTitle,
       required this.pickUpLocation,
-      required this.dropLocation});
+      required this.dropLocation})
+      : super(key: key);
+
   @override
   Widget build(BuildContext contx) {
     return Card(
@@ -31,7 +34,10 @@ class OrdersWidget extends StatelessWidget {
             ChangeNotifierProvider(create: (contx) => BidsProvider());
             Navigator.of(contx).pushNamed(
               OrderDetailScreen.OrderDetailScreenRoute,
-              arguments: id,
+              arguments: {
+                'orderId': id,
+                'isCourierService': false,
+              },
             );
           },
           leading: CircleAvatar(

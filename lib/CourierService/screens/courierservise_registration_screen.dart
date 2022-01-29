@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wecare_logistics/CourierService/drawer/courier_drawer.dart';
 import 'package:wecare_logistics/CourierService/widgets/courier_appbar.dart';
 
 class CourierRegistrationScreen extends StatefulWidget {
@@ -24,6 +25,7 @@ class CourierRegistrationScreenState extends State<CourierRegistrationScreen> {
   @override
   Widget build(BuildContext contx) {
     return Scaffold(
+      drawer: CourierDrawer(),
       appBar: PreferredSize(
         child: CourierAppBar(
           barTitle: "Registration",

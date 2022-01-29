@@ -3,17 +3,22 @@ import 'package:provider/provider.dart';
 
 import 'package:wecare_logistics/CourierService/screens/courier_homepage.dart';
 import 'package:wecare_logistics/CourierService/screens/courier_myprofile.dart';
+import 'package:wecare_logistics/CourierService/screens/courier_yourorder.dart';
 import 'package:wecare_logistics/CourierService/screens/courierservise_registration_screen.dart';
+import 'package:wecare_logistics/models/transaction_model.dart';
+import 'package:wecare_logistics/models/user.dart';
 import 'package:wecare_logistics/screens/login_screen.dart';
 import 'package:wecare_logistics/screens/role_choice_screen.dart';
 import 'package:wecare_logistics/screens/signup_screen.dart';
 import 'package:wecare_logistics/screens/splash_screen.dart';
-import 'package:wecare_logistics/sender/models/order_model.dart';
+import 'package:wecare_logistics/models/bids_model.dart';
+import 'package:wecare_logistics/models/order_model.dart';
 import 'package:wecare_logistics/sender/screens/create_order_screen.dart';
-import 'package:wecare_logistics/sender/screens/order_detail_screen.dart';
+import 'package:wecare_logistics/screens/order_detail_screen.dart';
 import 'package:wecare_logistics/sender/screens/send_yourorder_tab.dart';
 import 'package:wecare_logistics/sender/screens/sender_homepage_tab.dart';
 import 'package:wecare_logistics/sender/screens/sender_tabs.dart';
+import 'package:wecare_logistics/sender/screens/sender_wallet.dart';
 import 'package:wecare_logistics/sender/screens/user_profile.dart';
 
 void main() => runApp(MyApp());
@@ -21,8 +26,15 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   static const myAppRoute = "/MyAppRoute";
   Widget build(BuildContext contx) {
-    return ChangeNotifierProvider(
-      create: (contx) => OrdersProvider(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (contx) => OrdersProvider(),
+        ),
+        ChangeNotifierProvider(create: (contx) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => BidsProvider()),
+        ChangeNotifierProvider(create: (_) => TransactionProvider()),
+      ],
       child: MaterialApp(
         title: "WeCare",
         theme:
@@ -45,6 +57,8 @@ class MyApp extends StatelessWidget {
           SenderYourOrderTabs.senderYourOrderTabsRoute: (contx) =>
               SenderYourOrderTabs(),
           UserProfile.userProfileRoute: (contx) => UserProfile(),
+          SenderWallet.senderWalletRoute: (contx) => SenderWallet(),
+
           //-----------------------------------------------------------
 
           //Courier Service Routes
@@ -53,6 +67,7 @@ class MyApp extends StatelessWidget {
           CourierRegistrationScreen.courierRegistrationScreenRoute: (contx) =>
               CourierRegistrationScreen(),
           CourierMyProfile.courierMyProfileRoute: (contx) => CourierMyProfile(),
+          CourierYourOrder.courierYourOrderRoute: (contx) => CourierYourOrder(),
         },
       ),
     );

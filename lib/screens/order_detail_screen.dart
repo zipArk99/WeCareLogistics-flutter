@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:wecare_logistics/sender/models/bids_model.dart';
-import 'package:wecare_logistics/sender/models/order_model.dart';
+import 'package:wecare_logistics/models/bids_model.dart';
+import 'package:wecare_logistics/models/order_model.dart';
 import 'package:wecare_logistics/sender/widgets/bid_widget.dart';
 import 'package:wecare_logistics/sender/widgets/sender_appbar.dart';
 
@@ -51,12 +51,14 @@ class OrderDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext contx) {
-    String orderId = ModalRoute.of(contx)!.settings.arguments as String;
+    Map<String, dynamic> orderModalRoute =
+        ModalRoute.of(contx)!.settings.arguments as Map<String, dynamic>;
+
+    final String orderId = orderModalRoute['orderId'] as String;
+    final bool isCourierService = orderModalRoute['isCourierService'] as bool;
 
     Order order = Provider.of<OrdersProvider>(contx, listen: false)
         .getSingleOrder(orderId);
-
-    print("xxxxxxxxx::" + order.orderTitle);
 
     return Scaffold(
       appBar: PreferredSize(
@@ -382,7 +384,13 @@ class OrderDetailScreen extends StatelessWidget {
                         physics: NeverScrollableScrollPhysics(),
                         itemBuilder: (contx, index) {
                           return BidWidget(
+                            order: order,
+                            courierServiceId: order.bids[index].courierId,
                             price: order.bids[index].bidPrice.toString(),
+                            modeOfTransport: order.bids[index].modeOfTransport,
+                            bidExpectedDeliveryDate:
+                                order.bids[index].bidExpectedDeliveryDate,
+                            isCourierService: isCourierService,
                           );
                         },
                         itemCount: order.bids.length,

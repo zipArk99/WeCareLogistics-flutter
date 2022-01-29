@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:wecare_logistics/sender/models/order_model.dart';
+import 'package:wecare_logistics/models/order_model.dart';
 
 import 'package:wecare_logistics/sender/widgets/order_widget.dart';
 
@@ -58,6 +58,7 @@ class SenderHomePageScreen extends StatelessWidget {
                       child: ListView.builder(
                         itemBuilder: (contx, index) {
                           return OrdersWidget(
+                            key: Key(order.getOrderList()[index].orderId),
                             id: order.getOrderList()[index].orderId,
                             orderTitle: order.getOrderList()[index].orderTitle,
                             pickUpLocation:
