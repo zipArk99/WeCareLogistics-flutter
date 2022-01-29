@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:wecare_logistics/models/user.dart';
 import 'package:wecare_logistics/sender/drawer/drawer_screen.dart';
 
 class UserProfile extends StatefulWidget {
@@ -10,12 +12,12 @@ class UserProfile extends StatefulWidget {
 }
 
 class UserProfileState extends State<UserProfile> {
-  Widget createTextFormField(String title) {
+  Widget createTextFormField(String title, String value) {
     return Padding(
       padding: const EdgeInsets.all(10),
       child: TextFormField(
         enabled: false,
-        initialValue: "Shaurya Kaj",
+        initialValue: value,
         decoration: InputDecoration(labelText: title),
       ),
     );
@@ -23,6 +25,7 @@ class UserProfileState extends State<UserProfile> {
 
   @override
   Widget build(BuildContext contx) {
+    var user = Provider.of<UserProvider>(contx);
     return Scaffold(
       drawer: DrawerScreen(),
       appBar: AppBar(),
@@ -75,10 +78,12 @@ class UserProfileState extends State<UserProfile> {
                             ],
                           ),
                         ), */
-                        createTextFormField("Name"),
-                        createTextFormField("Email"),
-                        createTextFormField("PhoneNo"),
-                        createTextFormField("Address")
+                        createTextFormField("Name",
+                            "${user.userFirstName} ${user.userLastName}"),
+                        createTextFormField("Email", user.userEmail.toString()),
+                        createTextFormField(
+                            "PhoneNo", user.userPhoneNo.toString()),
+                        createTextFormField("Address", "sukruti flats"),
                       ],
                     ),
                   ),

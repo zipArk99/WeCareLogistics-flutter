@@ -77,18 +77,22 @@ class CreateOrderScreenState extends State<CreateOrderScreen> {
     required String? Function(String?) funValidate,
     required Function(String?) funSave,
   }) {
-    return TextFormField(
-      keyboardType: keyboard,
-      textInputAction: TextInputAction.next,
-      focusNode: focus,
-      decoration: InputDecoration(
-        labelText: label,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: TextFormField(
+        keyboardType: keyboard,
+        textInputAction: TextInputAction.next,
+        focusNode: focus,
+        decoration: InputDecoration(
+          border: OutlineInputBorder(),
+          labelText: label,
+        ),
+        onFieldSubmitted: (_) {
+          Focus.of(contx).requestFocus(requestF);
+        },
+        validator: funValidate,
+        onSaved: funSave,
       ),
-      onFieldSubmitted: (_) {
-        Focus.of(contx).requestFocus(requestF);
-      },
-      validator: funValidate,
-      onSaved: funSave,
     );
   }
 
@@ -440,7 +444,10 @@ class CreateOrderScreenState extends State<CreateOrderScreen> {
                         keyboardType: TextInputType.number,
                         textInputAction: TextInputAction.done,
                         focusNode: _quantityFocus,
-                        decoration: InputDecoration(labelText: "Qyt"),
+                        decoration: InputDecoration(
+                          labelText: "Qyt",
+                          border: OutlineInputBorder(),
+                        ),
                         onFieldSubmitted: (_) {
                           opendDatePicker();
                         },
