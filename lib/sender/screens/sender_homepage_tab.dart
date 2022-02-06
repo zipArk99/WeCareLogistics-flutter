@@ -6,22 +6,61 @@ import 'package:wecare_logistics/sender/widgets/order_widget.dart';
 
 import 'create_order_screen.dart';
 
-class SenderHomePageScreen extends StatelessWidget {
+class SenderHomePageScreen extends StatefulWidget {
   static const String senderHomePageScreenRoute = "/SenderHomePageScreenRoute";
+
+  @override
+  _SenderHomePageScreenState createState() => _SenderHomePageScreenState();
+}
+
+class _SenderHomePageScreenState extends State<SenderHomePageScreen> {
+  bool init = true;
+  bool isLoading = false;
+  @override
+  Widget createHomePageContainer() {
+    return Flexible(
+      flex: 1,
+      fit: FlexFit.tight,
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+        height: 125,
+        width: 100,
+        color: Colors.amber,
+      ),
+    );
+  }
+
+  void didChangeDependencies() async {
+    setState(() {
+      isLoading = true;
+    });
+    await Provider.of<OrdersProvider>(context).fetchOrder(true);
+    init = false;
+    setState(() {
+      isLoading = false;
+    });
+
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext contx) {
     var order = Provider.of<OrdersProvider>(contx);
+    print("order length::" + order.getOrderList().length.toString());
     return Scaffold(
       body: Column(
         children: [
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-            height: 200,
-            child: Card(
-              child: Center(
-                child: Text("Picture"),
-              ),
-            ),
+          Row(
+            children: [
+              createHomePageContainer(),
+              createHomePageContainer(),
+            ],
+          ),
+          Row(
+            children: [
+              createHomePageContainer(),
+              createHomePageContainer(),
+            ],
           ),
           Text("Orders"),
           order.getOrderList().isEmpty
@@ -50,28 +89,31 @@ class SenderHomePageScreen extends StatelessWidget {
                     ],
                   ),
                 )
-              : Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(5),
-                    child: Card(
-                      color: Colors.white60,
-                      child: ListView.builder(
-                        itemBuilder: (contx, index) {
-                          return OrdersWidget(
-                            key: Key(order.getOrderList()[index].orderId),
-                            id: order.getOrderList()[index].orderId,
-                            orderTitle: order.getOrderList()[index].orderTitle,
-                            pickUpLocation:
-                                order.getOrderList()[index].pickUpLocation,
-                            dropLocation:
-                                order.getOrderList()[index].dropLocation,
-                          );
-                        },
-                        itemCount: order.getOrderList().length,
+              : isLoading
+                  ? Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(5),
+                        child: ListView.builder(
+                          itemBuilder: (contx, index) {
+                            return OrdersWidget(
+                              published: order.getOrderList()[index].published,
+                              key: Key(order.getOrderList()[index].orderId),
+                              id: order.getOrderList()[index].orderId,
+                              orderTitle:
+                                  order.getOrderList()[index].orderTitle,
+                              pickUpLocation:
+                                  order.getOrderList()[index].pickUpLocation,
+                              dropLocation:
+                                  order.getOrderList()[index].dropLocation,
+                            );
+                          },
+                          itemCount: order.getOrderList().length,
+                        ),
                       ),
                     ),
-                  ),
-                ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -84,4 +126,3 @@ class SenderHomePageScreen extends StatelessWidget {
     );
   }
 }
-   /*       */

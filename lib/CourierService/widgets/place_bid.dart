@@ -101,6 +101,7 @@ class PlaceBidBottomModelSheetWidgetState
               TextButton(
                 onPressed: () {
                   Bid bid = Bid(
+                      orderId: singleOrder.orderId,
                       bidId: Uuid().v4(),
                       courierId: user.id,
                       bidPrice: _bidPrice as double,

@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
-import 'package:wecare_logistics/models/user.dart';
 
 class Transcation {
   final String transactionId;
