@@ -21,6 +21,8 @@ class PublishedOrderTab extends StatelessWidget {
                   child: ListView.builder(
                     itemBuilder: (contx, index) {
                       return OrdersWidget(
+                        published:
+                            order.getPublishedOrderList()[index].published,
                         key: Key(order.getPublishedOrderList()[index].orderId),
                         id: order.getPublishedOrderList()[index].orderId,
                         orderTitle:

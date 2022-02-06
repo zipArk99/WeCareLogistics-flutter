@@ -28,32 +28,35 @@ class _CourierServiceHomePageState extends State<CourierServiceHomePage> {
 
   @override
   Widget build(BuildContext contx) {
-    return Scaffold(
-      drawer: CourierDrawer(),
-      appBar: PreferredSize(
-          preferredSize: Size.fromHeight(80),
-          child: CourierAppBar(
-            barTitle: tabs[tabIndex]['title'].toString(),
-          )),
-      body: tabs[tabIndex]['tab'] as Widget,
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: tabIndex,
-        unselectedIconTheme: IconThemeData(color: Colors.grey, size: 35),
-        selectedIconTheme:
-            IconThemeData(color: Theme.of(contx).primaryColor, size: 35),
-        onTap: onTabTabs,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.shop_sharp,
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        drawer: CourierDrawer(),
+        appBar: PreferredSize(
+            preferredSize: Size.fromHeight(80),
+            child: CourierAppBar(
+              barTitle: tabs[tabIndex]['title'].toString(),
+            )),
+        body: tabs[tabIndex]['tab'] as Widget,
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: tabIndex,
+          unselectedIconTheme: IconThemeData(color: Colors.grey, size: 35),
+          selectedIconTheme:
+              IconThemeData(color: Theme.of(contx).primaryColor, size: 35),
+          onTap: onTabTabs,
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.shop_sharp,
+              ),
+              label: "MarketPlace",
             ),
-            label: "MarketPlace",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.card_travel),
-            label: "My Bid",
-          ),
-        ],
+            BottomNavigationBarItem(
+              icon: Icon(Icons.card_travel),
+              label: "My Bid",
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -8,20 +8,37 @@ import 'package:wecare_logistics/models/order_model.dart';
 
 import 'package:wecare_logistics/screens/order_detail_screen.dart';
 
-class OrdersWidget extends StatelessWidget {
-  final String orderId = Random().nextInt(1000).toString();
+class OrdersWidget extends StatefulWidget {
   final String id;
   final String orderTitle;
   final String pickUpLocation;
   final String dropLocation;
+  final bool published;
 
   OrdersWidget(
       {required Key key,
       required this.id,
       required this.orderTitle,
       required this.pickUpLocation,
-      required this.dropLocation})
+      required this.dropLocation,
+      required this.published})
       : super(key: key);
+
+  @override
+  _OrdersWidgetState createState() => _OrdersWidgetState();
+}
+
+class _OrdersWidgetState extends State<OrdersWidget> {
+  final String orderId = Random().nextInt(1000).toString();
+
+  @override
+  void didChangeDependencies() {
+    if (widget.published) {
+      Provider.of<OrdersProvider>(context).fetchOrderBids(widget.id);
+    }
+
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext contx) {
@@ -31,11 +48,11 @@ class OrdersWidget extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         child: ListTile(
           onTap: () {
-            ChangeNotifierProvider(create: (contx) => BidsProvider());
+            /* ChangeNotifierProvider(create: (contx) => BidsProvider()); */
             Navigator.of(contx).pushNamed(
               OrderDetailScreen.OrderDetailScreenRoute,
               arguments: {
-                'orderId': id,
+                'orderId': widget.id,
                 'isCourierService': false,
               },
             );
@@ -45,16 +62,17 @@ class OrdersWidget extends StatelessWidget {
             radius: 30,
             child: Text("#" + orderId),
           ),
-          title: Text(orderTitle),
+          title: Text(widget.orderTitle),
           subtitle: Text(
-            "$pickUpLocation-->$dropLocation",
+            "${widget.pickUpLocation}-->${widget.dropLocation}",
             style: TextStyle(
               fontSize: 12,
             ),
           ),
           trailing: IconButton(
             onPressed: () {
-              Provider.of<OrdersProvider>(contx, listen: false).deleteOrder(id);
+              Provider.of<OrdersProvider>(contx, listen: false)
+                  .deleteOrder(widget.id);
             },
             icon: Icon(
               Icons.delete,

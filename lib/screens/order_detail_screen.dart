@@ -375,29 +375,26 @@ class OrderDetailScreen extends StatelessWidget {
                   ),
                 ),
               if (order.published == true)
-                ChangeNotifierProvider(
-                  create: (contx) => BidsProvider(),
-                  child: Consumer<BidsProvider>(
-                    builder: (contx, bids, child) {
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemBuilder: (contx, index) {
-                          return BidWidget(
-                            order: order,
-                            courierServiceId: order.bids[index].courierId,
-                            price: order.bids[index].bidPrice.toString(),
-                            modeOfTransport: order.bids[index].modeOfTransport,
-                            bidExpectedDeliveryDate:
-                                order.bids[index].bidExpectedDeliveryDate,
-                            isCourierService: isCourierService,
-                          );
-                        },
-                        itemCount: order.bids.length,
-                      );
-                    },
-                  ),
-                )
+                Consumer<BidsProvider>(
+                  builder: (contx, bids, child) {
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemBuilder: (contx, index) {
+                        return BidWidget(
+                          order: order,
+                          courierServiceId: order.bids[index].courierId,
+                          price: order.bids[index].bidPrice.toString(),
+                          modeOfTransport: order.bids[index].modeOfTransport,
+                          bidExpectedDeliveryDate:
+                              order.bids[index].bidExpectedDeliveryDate,
+                          isCourierService: isCourierService,
+                        );
+                      },
+                      itemCount: order.bids.length,
+                    );
+                  },
+                ),
             ],
           ),
         ),

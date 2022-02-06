@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'package:wecare_logistics/CourierService/screens/courier_homepage.dart';
 import 'package:wecare_logistics/CourierService/screens/courier_myprofile.dart';
 import 'package:wecare_logistics/CourierService/screens/courier_yourorder.dart';
@@ -21,18 +20,29 @@ import 'package:wecare_logistics/sender/screens/sender_tabs.dart';
 import 'package:wecare_logistics/sender/screens/sender_wallet.dart';
 import 'package:wecare_logistics/sender/screens/user_profile.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   static const myAppRoute = "/MyAppRoute";
   Widget build(BuildContext contx) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (contx) => OrdersProvider(),
-        ),
         ChangeNotifierProvider(create: (contx) => UserProvider()),
-        ChangeNotifierProvider(create: (_) => BidsProvider()),
+        ChangeNotifierProxyProvider<UserProvider, OrdersProvider>(
+            create: (contx) => OrdersProvider(userId: '', orders: []),
+            update: (contx, user, prevOrder) {
+              return OrdersProvider(
+                userId: user.id,
+                orders: prevOrder == null ? [] : prevOrder.getAllOrderList(),
+              );
+            }),
+        ChangeNotifierProxyProvider<UserProvider, BidsProvider>(
+            create: (contx) => BidsProvider(user: ''),
+            update: (contx, user, prevBidList) {
+              return BidsProvider(user: user.id);
+            }),
         ChangeNotifierProvider(create: (_) => TransactionProvider()),
       ],
       child: MaterialApp(

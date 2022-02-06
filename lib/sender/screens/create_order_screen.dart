@@ -19,6 +19,7 @@ class CreateOrderScreenState extends State<CreateOrderScreen> {
   String? _selectedDate;
 
   Order _newOrder = Order(
+      senderId: "",
       orderId: "",
       orderTitle: "",
       productCategory: "",
