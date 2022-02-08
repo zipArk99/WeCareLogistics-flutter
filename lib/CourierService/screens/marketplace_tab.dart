@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wecare_logistics/CourierService/widgets/marketplace_order.dart';
-import 'package:wecare_logistics/models/order_model.dart';
+import 'package:wecare_logistics/models/bids_model.dart';
 
 class MarketPlaceTab extends StatefulWidget {
   @override
@@ -25,8 +25,11 @@ class _MarketPlaceTabState extends State<MarketPlaceTab> {
       setState(() {
         isLoading = true;
       });
-      await Provider.of<OrdersProvider>(context).fetchOrder(false);
+      await Provider.of<BidsProvider>(context)
+          .fetchFilteredPublishList(context);
       print("inside didChangeDependencies");
+
+      /*  await Provider.of<BidsProvider>(context).filterBidedOrders(context); */
       setState(() {
         isLoading = false;
       });
@@ -41,8 +44,8 @@ class _MarketPlaceTabState extends State<MarketPlaceTab> {
         Provider.of<OrdersProvider>(contx).getPublishedOrderList(); */
     /* var publishOrders = Provider.of<BidsProvider>(contx).checkUserBid(contx); */
 
-    var publishedOrders =
-        Provider.of<OrdersProvider>(contx).getPublishedOrderList();
+    var publishedOrders = Provider.of<BidsProvider>(context).getPubishOrderList;
+
     print("published orders::" + publishedOrders.length.toString());
     return Scaffold(
       body: isLoading
@@ -80,7 +83,8 @@ class _MarketPlaceTabState extends State<MarketPlaceTab> {
               : ListView.builder(
                   itemBuilder: (contx, index) {
                     return MarketPlaceOrderWidget(
-                      publishOrderId: publishedOrders[index].orderId,
+                      isBided: false,
+                      orderId: publishedOrders[index].orderId,
                     );
                   },
                   itemCount: publishedOrders.length,

@@ -3,39 +3,44 @@ import 'package:provider/provider.dart';
 import 'package:wecare_logistics/CourierService/widgets/place_bid.dart';
 import 'package:wecare_logistics/models/bids_model.dart';
 
-import 'package:wecare_logistics/models/order_model.dart';
-import 'package:wecare_logistics/models/user.dart';
 import 'package:wecare_logistics/screens/order_detail_screen.dart';
 
-class MarketPlaceOrderWidget extends StatelessWidget {
-  String publishOrderId;
+class MarketPlaceOrderWidget extends StatefulWidget {
+  String orderId;
+  bool isBided;
 
-  MarketPlaceOrderWidget({required this.publishOrderId});
+  MarketPlaceOrderWidget({required this.orderId, required this.isBided});
 
+  @override
+  _MarketPlaceOrderWidgetState createState() => _MarketPlaceOrderWidgetState();
+}
+
+class _MarketPlaceOrderWidgetState extends State<MarketPlaceOrderWidget> {
+  var isLoading = false;
   TextStyle standarFont() {
     return TextStyle(
       fontSize: 11,
     );
   }
 
-  bool checkBidedOrNot(BuildContext contx) {
-    var order =
-        Provider.of<OrdersProvider>(contx).getSingleOrder(publishOrderId);
-    var user = Provider.of<UserProvider>(contx).getUser();
-
-    for (int i = 0; i < order.bids.length; i++) {
-      if (order.bids[i].courierId == user.id) {
-        return true;
-      }
-    }
-    return false;
+  @override
+  void didChangeDependencies() async {
+    setState(() {
+      isLoading = true;
+    });
+    await Provider.of<BidsProvider>(context, listen: false)
+        .fetchOrderBids(widget.orderId);
+    setState(() {
+      isLoading = false;
+    });
+    super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext contx) {
-    var order =
-        Provider.of<OrdersProvider>(contx).getSingleOrder(publishOrderId);
-    print("checkBidedOrNot::" + checkBidedOrNot(contx).toString());
+    var order = Provider.of<BidsProvider>(contx, listen: false)
+        .getSingleOrder(widget.orderId);
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 13, vertical: 20),
       width: double.infinity,
@@ -46,7 +51,7 @@ class MarketPlaceOrderWidget extends StatelessWidget {
             Navigator.of(contx).pushNamed(
                 OrderDetailScreen.OrderDetailScreenRoute,
                 arguments: {
-                  'orderId': publishOrderId,
+                  'orderId': widget.orderId,
                   'isCourierService': true,
                 });
           },
@@ -172,19 +177,23 @@ class MarketPlaceOrderWidget extends StatelessWidget {
                               width: double.infinity,
                               margin: EdgeInsets.symmetric(
                                   vertical: 18, horizontal: 15),
-                              child: checkBidedOrNot(contx)
-                                  ? ElevatedButton.icon(
-                                      icon:
-                                          Icon(Icons.mode_edit_outline_rounded),
-                                      onPressed: () {
-                                        BottomSheetWidget(
-                                          contx: contx,
-                                          orderId: order.orderId,
-                                          isEdit: true,
-                                        );
-                                      },
-                                      label: Text("Edit"),
-                                    )
+                              child: widget.isBided
+                                  ? isLoading
+                                      ? Center(
+                                          child: CircularProgressIndicator(),
+                                        )
+                                      : ElevatedButton.icon(
+                                          icon: Icon(
+                                              Icons.mode_edit_outline_rounded),
+                                          onPressed: () {
+                                            BottomSheetWidget(
+                                              contx: contx,
+                                              orderId: order.orderId,
+                                              isEdit: true,
+                                            );
+                                          },
+                                          label: Text("Edit"),
+                                        )
                                   : ElevatedButton.icon(
                                       icon: Container(
                                         height: 20,

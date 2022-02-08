@@ -150,8 +150,7 @@ class BidWidget extends StatelessWidget {
                                         Provider.of<TransactionProvider>(contx,
                                                 listen: false)
                                             .addTransaction(
-                                          senderId: senderId,
-                                          courierServiceId: courierServiceId,
+                                          bidId: senderId,
                                           orderId: order.orderId,
                                           transactionAmount:
                                               double.parse(price),

@@ -77,6 +77,7 @@ class OrdersProvider with ChangeNotifier {
       int? pinCode,
       DateTime? orderCreatedOn,
       bool? published,
+      bool? bidSelected,
       List<Bid>? bid}) {
     return Order(
       senderId: senderId ?? "",
@@ -96,6 +97,7 @@ class OrdersProvider with ChangeNotifier {
       pinCode: pinCode ?? 0,
       orderCreatedOn: orderCreatedOn ?? DateTime.now(),
       published: published ?? false,
+      bidSelected: bidSelected ?? false,
       bids: bid ?? [],
     );
   }
@@ -127,6 +129,7 @@ class OrdersProvider with ChangeNotifier {
             'expectedDeliveryDate': newOrder.expectedDelivery.toIso8601String(),
             'orderCreatedOn': newOrder.orderCreatedOn.toIso8601String(),
             'orderPublishStatus': newOrder.published,
+            'bidSelected': newOrder.bidSelected,
             'bids': newOrder.bids,
           },
         ),
@@ -144,6 +147,7 @@ class OrdersProvider with ChangeNotifier {
     var order = Order(
       senderId: userId,
       published: newOrder.published,
+      bidSelected: newOrder.bidSelected,
       orderId: responseId,
       orderTitle: newOrder.orderTitle,
       productCategory: newOrder.productCategory,
@@ -191,15 +195,6 @@ class OrdersProvider with ChangeNotifier {
             'equalTo': json.encode(userId),
           },
         );
-      } else {
-        url = Uri.https(
-          'logistics-87e01-default-rtdb.firebaseio.com',
-          'orders.json',
-          {
-            'orderBy': json.encode("orderPublishStatus"),
-            'equalTo': json.encode(true),
-          },
-        );
       }
       List<Order> temp = [];
       var response = await http.get(url);
@@ -232,9 +227,10 @@ class OrdersProvider with ChangeNotifier {
           pinCode: orderValue['deliveryPincode'],
           orderCreatedOn: DateTime.parse(orderValue['orderCreatedOn']),
           published: orderValue['orderPublishStatus'],
+          bidSelected: orderValue['bidSelected'],
         ));
       });
-      _ordersList = [...temp];
+      setOrderList = [...temp];
       print("_orderList::" + _ordersList.length.toString());
     } catch (error) {
       print("error caught in catch block::" + error.toString());
@@ -243,6 +239,10 @@ class OrdersProvider with ChangeNotifier {
 
   List<Order> getAllOrderList() {
     return [..._ordersList];
+  }
+
+  set setOrderList(List<Order> orders) {
+    _ordersList = [...orders];
   }
 
   List<Order> getPublishedOrderList() {

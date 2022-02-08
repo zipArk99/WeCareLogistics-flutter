@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import 'package:wecare_logistics/models/bids_model.dart';
-import 'package:wecare_logistics/models/order_model.dart';
 import 'package:wecare_logistics/models/user.dart';
 
 class BottomSheetWidget {
@@ -51,13 +50,8 @@ class PlaceBidBottomModelSheetWidgetState
   void didChangeDependencies() {
     if (widget.isEdit) {
       if (init) {
-        var user = Provider.of<UserProvider>(context, listen: false).getUser();
-        var order = Provider.of<OrdersProvider>(context, listen: false)
-            .getSingleOrder(widget.orderId);
-
-        Bid bid = order.bids.firstWhere((element) {
-          return element.courierId == user.id;
-        });
+        var bid = Provider.of<BidsProvider>(context, listen: false)
+            .getCourierBid(widget.orderId);
 
         _bidPrice = bid.bidPrice;
         _intiModeValue = bid.modeOfTransport;
@@ -84,7 +78,7 @@ class PlaceBidBottomModelSheetWidgetState
 
     _formKey.currentState!.save();
     var user = Provider.of<UserProvider>(contx, listen: false).getUser();
-    var singleOrder = Provider.of<OrdersProvider>(contx, listen: false)
+    var singleOrder = Provider.of<BidsProvider>(contx, listen: false)
         .getSingleOrder(widget.orderId);
     showDialog(
         context: contx,

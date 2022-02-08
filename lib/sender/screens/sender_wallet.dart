@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:wecare_logistics/models/user.dart';
+import 'package:wecare_logistics/sender/widgets/add_money.dart';
 
 import 'package:wecare_logistics/sender/widgets/sender_appbar.dart';
 import 'package:wecare_logistics/sender/widgets/sender_lasttransactions.dart';
@@ -6,8 +10,10 @@ import 'package:wecare_logistics/sender/widgets/sender_lasttransactions.dart';
 /*   color: Color.fromRGBO(46, 157, 255, 1), */
 class SenderWallet extends StatelessWidget {
   static final String senderWalletRoute = '/SenderWalletRoute';
+
   @override
   Widget build(BuildContext contx) {
+    var userWalletBalance = Provider.of<UserProvider>(contx).getWalletBalance;
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(80),
@@ -28,7 +34,7 @@ class SenderWallet extends StatelessWidget {
                   Column(
                     children: [
                       Text(
-                        "\$20.749",
+                        "\u{20B9} $userWalletBalance",
                         style: TextStyle(
                           fontSize: 40,
                           fontWeight: FontWeight.bold,
@@ -43,7 +49,9 @@ class SenderWallet extends StatelessWidget {
                     height: 50,
                     margin: EdgeInsets.symmetric(vertical: 20),
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        AddMoneyDialogBox(contx);
+                      },
                       child: Text("Add Money"),
                     ),
                   ),
@@ -64,10 +72,12 @@ class SenderWallet extends StatelessWidget {
                   color: Colors.amber.shade300,
                   child: Column(
                     children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: 20),
+                      Container(
+                        alignment: Alignment.bottomLeft,
+                        padding:
+                            EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                         child: Text(
-                          "Last Transactions",
+                          "Last Transactions (3)",
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,

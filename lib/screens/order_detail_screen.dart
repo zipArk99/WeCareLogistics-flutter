@@ -51,14 +51,20 @@ class OrderDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext contx) {
+    Order order;
     Map<String, dynamic> orderModalRoute =
         ModalRoute.of(contx)!.settings.arguments as Map<String, dynamic>;
 
     final String orderId = orderModalRoute['orderId'] as String;
     final bool isCourierService = orderModalRoute['isCourierService'] as bool;
 
-    Order order = Provider.of<OrdersProvider>(contx, listen: false)
-        .getSingleOrder(orderId);
+    if (isCourierService) {
+      order = Provider.of<BidsProvider>(contx, listen: false)
+          .getSingleOrder(orderId);
+    } else {
+      order = Provider.of<OrdersProvider>(contx, listen: false)
+          .getSingleOrder(orderId);
+    }
 
     return Scaffold(
       appBar: PreferredSize(
