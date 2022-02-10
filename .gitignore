@@ -22,6 +22,9 @@
 
 # Flutter/Dart/Pub related
 **/doc/api/
+lib/models/api_url.dart
+
+
 **/ios/Flutter/.last_build_id
 .dart_tool/
 .flutter-plugins

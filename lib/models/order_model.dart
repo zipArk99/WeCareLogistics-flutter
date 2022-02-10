@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
+import 'package:wecare_logistics/models/api_url.dart';
 import 'dart:convert';
 import 'package:wecare_logistics/models/bids_model.dart';
 
@@ -316,8 +317,7 @@ class OrdersProvider with ChangeNotifier {
 
   Future<void> publishOrder(String id) async {
     try {
-      var url = Uri.https(
-          'logistics-87e01-default-rtdb.firebaseio.com', 'orders/$id.json');
+      var url = Uri.https('${Api.url}', 'orders/$id.json');
 
       var response = await http.patch(
         url,

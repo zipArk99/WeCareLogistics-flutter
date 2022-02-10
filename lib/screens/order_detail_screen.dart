@@ -389,8 +389,8 @@ class OrderDetailScreen extends StatelessWidget {
                       itemBuilder: (contx, index) {
                         return BidWidget(
                           order: order,
-                          courierServiceId: order.bids[index].courierId,
-                          price: order.bids[index].bidPrice.toString(),
+                          bidId: order.bids[index].bidId,
+                          price: order.bids[index].bidPrice,
                           modeOfTransport: order.bids[index].modeOfTransport,
                           bidExpectedDeliveryDate:
                               order.bids[index].bidExpectedDeliveryDate,

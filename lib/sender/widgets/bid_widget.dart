@@ -1,28 +1,87 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:wecare_logistics/models/bids_model.dart';
 import 'package:wecare_logistics/models/order_model.dart';
 import 'package:wecare_logistics/models/transaction_model.dart';
 import 'package:wecare_logistics/models/user.dart';
 
 class BidWidget extends StatelessWidget {
   final Order order;
-  final String courierServiceId;
+  final String bidId;
   final String modeOfTransport;
   final DateTime bidExpectedDeliveryDate;
-  final String price;
+  final double price;
   final bool isCourierService;
   BidWidget(
       {required this.order,
-      required this.courierServiceId,
+      required this.bidId,
       required this.price,
       required this.modeOfTransport,
       required this.bidExpectedDeliveryDate,
       required this.isCourierService});
 
+  Future<void> transactionDialogBox(contx) async {
+    return showDialog(
+        context: contx,
+        builder: (contx) {
+          return Dialog(
+            child: Container(
+              height: 250,
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    "Pay The \nAmount",
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.w300,
+                      color: Theme.of(contx).primaryColor,
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.symmetric(vertical: 20),
+                    child: TextFormField(
+                      readOnly: true,
+                      initialValue: price.toString(),
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: Theme.of(contx).primaryColor,
+                          fontWeight: FontWeight.w500),
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        prefixText: "\u{20B9} ",
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: double.infinity,
+                    margin: EdgeInsets.symmetric(horizontal: 20),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Provider.of<TransactionProvider>(contx, listen: false)
+                            .proccessTransaction(
+                          bidId: bidId,
+                          orderId: order.orderId,
+                          transactionAmount: price,
+                        );
+                      },
+                      child: Text("PAY"),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext contx) {
     var senderId = Provider.of<UserProvider>(contx).getSenderUser2().id;
-    print("price:::::" + price);
+    print("price:::::" + price.toString());
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Card(
@@ -146,20 +205,11 @@ class BidWidget extends StatelessWidget {
                                       },
                                       child: Text("Cancel")),
                                   TextButton(
-                                      onPressed: () {
-                                        Provider.of<TransactionProvider>(contx,
-                                                listen: false)
-                                            .addTransaction(
-                                          bidId: senderId,
-                                          orderId: order.orderId,
-                                          transactionAmount:
-                                              double.parse(price),
-                                        );
-                                        Provider.of<OrdersProvider>(contx,
-                                                listen: false)
-                                            .ifBidSelected(order);
-                                      },
-                                      child: Text("Confirm")),
+                                    onPressed: () {
+                                      transactionDialogBox(contx);
+                                    },
+                                    child: Text("Confirm"),
+                                  ),
                                 ],
                               );
                             },
