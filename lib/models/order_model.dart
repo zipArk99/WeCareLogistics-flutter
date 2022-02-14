@@ -106,8 +106,7 @@ class OrdersProvider with ChangeNotifier {
   Future<void> addNewOrder(Order newOrder, String deliveryDate) async {
     String responseId = '';
     try {
-      var url = Uri.https(
-          'logistics-87e01-default-rtdb.firebaseio.com', 'orders.json');
+      var url = Uri.https('${Api.url}', 'orders.json');
       print('--------userId::' + userId);
 
       var response = await http.post(
@@ -189,7 +188,7 @@ class OrdersProvider with ChangeNotifier {
     try {
       if (isSender) {
         url = Uri.https(
-          'logistics-87e01-default-rtdb.firebaseio.com',
+          '${Api.url}',
           'orders.json',
           {
             'orderBy': json.encode("senderId"),
@@ -261,7 +260,7 @@ class OrdersProvider with ChangeNotifier {
   Future<void> fetchPublishOrderList() async {
     try {
       var url = Uri.https(
-        'logistics-87e01-default-rtdb.firebaseio.com',
+        '${Api.url}',
         'orders.json',
         {
           'orderBy': json.encode("orderPublishStatus"),
@@ -299,8 +298,7 @@ class OrdersProvider with ChangeNotifier {
 
   Future<void> deleteOrder(String orderId) async {
     try {
-      var url = Uri.https('logistics-87e01-default-rtdb.firebaseio.com',
-          'orders/$orderId.json');
+      var url = Uri.https('${Api.url}', 'orders/$orderId.json');
 
       var response = await http.delete(url);
 
@@ -348,10 +346,11 @@ class OrdersProvider with ChangeNotifier {
     notifyListeners();
   }
 
+ 
+
   Future<void> fetchOrderBids(String orderId) async {
     try {
-      var url = Uri.https(
-          'logistics-87e01-default-rtdb.firebaseio.com', 'bids/$orderId.json');
+      var url = Uri.https('${Api.url}', 'bids/$orderId.json');
       var response = await http.get(url);
 
       if (response.statusCode >= 400) {
@@ -369,6 +368,7 @@ class OrdersProvider with ChangeNotifier {
               orderId: orderId,
               bidId: bidId,
               courierId: bidData['courierId'],
+              courierName: bidData['courierName'],
               bidPrice: bidData['bidPrice'],
               bidExpectedDeliveryDate:
                   DateTime.parse(bidData['bidExpectedDeliveryDate']),

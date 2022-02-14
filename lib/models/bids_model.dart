@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:wecare_logistics/models/api_url.dart';
 
 import 'package:wecare_logistics/models/order_model.dart';
 
@@ -10,6 +11,7 @@ class Bid {
   String orderId;
   String bidId;
   String courierId;
+  String courierName;
   double bidPrice;
   DateTime bidExpectedDeliveryDate;
   String modeOfTransport;
@@ -19,6 +21,7 @@ class Bid {
     required this.orderId,
     required this.bidId,
     required this.courierId,
+    required this.courierName,
     required this.bidPrice,
     required this.bidExpectedDeliveryDate,
     required this.modeOfTransport,
@@ -37,13 +40,13 @@ class BidsProvider with ChangeNotifier {
     print(order.orderId);
 
     try {
-      var url = Uri.https('logistics-87e01-default-rtdb.firebaseio.com',
-          'bids/${bid.orderId}.json');
+      var url = Uri.https('${Api.url}', 'bids/${bid.orderId}.json');
 
       var response = await http.post(
         url,
         body: json.encode(
           {
+            'courierName': bid.courierName,
             'courierId': user,
             'bidPrice': bid.bidPrice,
             'bidExpectedDeliveryDate':
@@ -65,6 +68,7 @@ class BidsProvider with ChangeNotifier {
           orderId: bid.orderId,
           bidId: decodedJsonString['name'],
           courierId: bid.courierId,
+          courierName: bid.courierName,
           bidPrice: bid.bidPrice,
           bidExpectedDeliveryDate: bid.bidExpectedDeliveryDate,
           modeOfTransport: bid.modeOfTransport,
@@ -73,16 +77,13 @@ class BidsProvider with ChangeNotifier {
       /*  order.bids.add(bid); */
       _bidedOrderList.add(order);
 
-      url = Uri.https('logistics-87e01-default-rtdb.firebaseio.com',
-          'bidedOrders/$user.json');
+      url = Uri.https('${Api.url}', 'bidedOrders/$user.json');
 
       response = await http.post(
         url,
-        body: json.encode(
-          {
-            'orderId': order.orderId,
-          },
-        ),
+        body: json.encode({
+          'orderId': order.orderId
+        }),
       );
 
       notifyListeners();
@@ -94,8 +95,7 @@ class BidsProvider with ChangeNotifier {
   Future<List<String>> fetchBidedOrderList() async {
     List<String> tempId = [];
     try {
-      var url = Uri.https('logistics-87e01-default-rtdb.firebaseio.com',
-          'bidedOrders/$user.json');
+      var url = Uri.https('${Api.url}', 'bidedOrders/$user.json');
 
       var response = await http.get(url);
       if (response.statusCode >= 400) {
@@ -121,7 +121,7 @@ class BidsProvider with ChangeNotifier {
 /*   Future<void> fetchBid() async {
     try {
       var url = Uri.https(
-        'logistics-87e01-default-rtdb.firebaseio.com',
+        '${Api.url}',
         'bids.json',
         {
           'orderBy': json.encode('courierId'),
@@ -179,7 +179,7 @@ class BidsProvider with ChangeNotifier {
       await filterBidedOrders(context);
 
       var url = Uri.https(
-        'logistics-87e01-default-rtdb.firebaseio.com',
+        '${Api.url}',
         'orders.json',
         {
           'orderBy': json.encode("orderPublishStatus"),
@@ -239,8 +239,7 @@ class BidsProvider with ChangeNotifier {
 
   Future<void> fetchOrderBids(String orderId) async {
     try {
-      var url = Uri.https(
-          'logistics-87e01-default-rtdb.firebaseio.com', 'bids/$orderId.json');
+      var url = Uri.https('${Api.url}', 'bids/$orderId.json');
       var response = await http.get(url);
 
       if (response.statusCode >= 400) {
@@ -258,6 +257,7 @@ class BidsProvider with ChangeNotifier {
               orderId: orderId,
               bidId: bidId,
               courierId: bidData['courierId'],
+              courierName: bidData['courierName'],
               bidPrice: bidData['bidPrice'],
               bidExpectedDeliveryDate:
                   DateTime.parse(bidData['bidExpectedDeliveryDate']),

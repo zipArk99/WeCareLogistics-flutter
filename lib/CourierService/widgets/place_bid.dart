@@ -77,7 +77,7 @@ class PlaceBidBottomModelSheetWidgetState
     }
 
     _formKey.currentState!.save();
-    var user = Provider.of<UserProvider>(contx, listen: false).getUser();
+    var user = Provider.of<UserProvider>(contx, listen: false);
     var singleOrder = Provider.of<BidsProvider>(contx, listen: false)
         .getSingleOrder(widget.orderId);
     showDialog(
@@ -98,6 +98,7 @@ class PlaceBidBottomModelSheetWidgetState
                       orderId: singleOrder.orderId,
                       bidId: Uuid().v4(),
                       courierId: user.id,
+                      courierName: user.userFirstName + user.userLastName,
                       bidPrice: _bidPrice as double,
                       bidExpectedDeliveryDate: _selectedDate,
                       modeOfTransport: _intiModeValue.toString(),

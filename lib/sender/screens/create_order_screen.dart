@@ -147,7 +147,7 @@ class CreateOrderScreenState extends State<CreateOrderScreen> {
         child: SenderAppBar(barTitle: "Create Order"),
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: SingleChildScrollView(
           child: Form(
             key: _form,

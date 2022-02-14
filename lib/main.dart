@@ -6,6 +6,7 @@ import 'package:wecare_logistics/CourierService/screens/courier_yourorder.dart';
 import 'package:wecare_logistics/CourierService/screens/courierservise_registration_screen.dart';
 import 'package:wecare_logistics/models/transaction_model.dart';
 import 'package:wecare_logistics/models/user.dart';
+import 'package:wecare_logistics/models/your_order.dart';
 import 'package:wecare_logistics/screens/login_screen.dart';
 import 'package:wecare_logistics/screens/role_choice_screen.dart';
 import 'package:wecare_logistics/screens/signup_screen.dart';
@@ -43,7 +44,24 @@ class MyApp extends StatelessWidget {
             update: (contx, user, prevBidList) {
               return BidsProvider(user: user.id);
             }),
-        ChangeNotifierProvider(create: (_) => TransactionProvider()),
+        ChangeNotifierProxyProvider<UserProvider, TransactionProvider>(
+            create: (contx) =>
+                TransactionProvider(userId: '', prevTransactionList: []),
+            update: (contx, user, prevTransactionList) {
+              return TransactionProvider(
+                  userId: user.id,
+                  prevTransactionList: prevTransactionList == null
+                      ? []
+                      : prevTransactionList.getTransactionList);
+            }),
+        ChangeNotifierProxyProvider<UserProvider, YourOrderProvider>(
+            create: (contx) => YourOrderProvider(userId: '', yourOrderList: []),
+            update: (contx, user, prevList) {
+              return YourOrderProvider(
+                  userId: user.id,
+                  yourOrderList:
+                      prevList == null ? [] : prevList.getYourOrderList);
+            }),
       ],
       child: MaterialApp(
         title: "WeCare",
