@@ -2,6 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class SenderLastTransactionsWidget extends StatelessWidget {
+  final String courierName;
+  final DateTime transactionDate;
+  final double transactionAmount;
+
+  SenderLastTransactionsWidget({
+    required this.courierName,
+    required this.transactionAmount,
+    required this.transactionDate,
+  });
   @override
   Widget build(BuildContext contx) {
     return Container(
@@ -9,7 +18,7 @@ class SenderLastTransactionsWidget extends StatelessWidget {
       child: Card(
         child: ListTile(
           title: Text(
-            "Chintu Service",
+            courierName,
             style: TextStyle(
               fontSize: 15,
             ),
@@ -20,7 +29,7 @@ class SenderLastTransactionsWidget extends StatelessWidget {
             ),
           ),
           trailing: Text(
-            "- \$140.00",
+            "- \u{20B9}$transactionAmount",
             style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.bold,

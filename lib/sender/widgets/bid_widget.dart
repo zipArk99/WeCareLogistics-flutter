@@ -1,28 +1,102 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:wecare_logistics/models/bids_model.dart';
 import 'package:wecare_logistics/models/order_model.dart';
 import 'package:wecare_logistics/models/transaction_model.dart';
 import 'package:wecare_logistics/models/user.dart';
+import 'package:wecare_logistics/models/your_order.dart';
 
 class BidWidget extends StatelessWidget {
   final Order order;
-  final String courierServiceId;
+  final String bidId;
+  final String courierId;
   final String modeOfTransport;
+  final String courierName;
   final DateTime bidExpectedDeliveryDate;
-  final String price;
+  final double price;
   final bool isCourierService;
   BidWidget(
       {required this.order,
-      required this.courierServiceId,
+      required this.bidId,
       required this.price,
+      required this.courierId,
       required this.modeOfTransport,
+      required this.courierName,
       required this.bidExpectedDeliveryDate,
       required this.isCourierService});
 
+  Future<void> transactionDialogBox(contx) {
+    return showDialog(
+        context: contx,
+        builder: (contx) {
+          return Dialog(
+            child: Container(
+              height: 250,
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    "Pay The \nAmount",
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.w300,
+                      color: Theme.of(contx).primaryColor,
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.symmetric(vertical: 20),
+                    child: TextFormField(
+                      readOnly: true,
+                      initialValue: price.toString(),
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: Theme.of(contx).primaryColor,
+                          fontWeight: FontWeight.w500),
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        prefixText: "\u{20B9} ",
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: double.infinity,
+                    margin: EdgeInsets.symmetric(horizontal: 20),
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        var transactionId = '';
+
+                        transactionId = await Provider.of<TransactionProvider>(
+                                contx,
+                                listen: false)
+                            .proccessTransaction(
+                          courierName: courierName,
+                          courierId: courierId,
+                          transactionType: 'payment',
+                          bidId: bidId,
+                          senderId: order.senderId,
+                          transactionAmount: price,
+                        );
+
+                        await Provider.of<YourOrderProvider>(contx,
+                                listen: false)
+                            .addYourOrder(order, bidId, transactionId);
+                      },
+                      child: Text("PAY"),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext contx) {
-    var senderId = Provider.of<UserProvider>(contx).getSenderUser2().id;
-    print("price:::::" + price);
+    print("price:::::" + price.toString());
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Card(
@@ -35,7 +109,7 @@ class BidWidget extends StatelessWidget {
                 child: TextButton(
                   onPressed: () {},
                   child: Text(
-                    "WeCare Transport",
+                    courierName,
                     style: TextStyle(
                       color: Theme.of(contx).primaryColor,
                       decoration: TextDecoration.underline,
@@ -146,21 +220,12 @@ class BidWidget extends StatelessWidget {
                                       },
                                       child: Text("Cancel")),
                                   TextButton(
-                                      onPressed: () {
-                                        Provider.of<TransactionProvider>(contx,
-                                                listen: false)
-                                            .addTransaction(
-                                          senderId: senderId,
-                                          courierServiceId: courierServiceId,
-                                          orderId: order.orderId,
-                                          transactionAmount:
-                                              double.parse(price),
-                                        );
-                                        Provider.of<OrdersProvider>(contx,
-                                                listen: false)
-                                            .ifBidSelected(order);
-                                      },
-                                      child: Text("Confirm")),
+                                    onPressed: () {
+                                      Navigator.of(contx).pop();
+                                      transactionDialogBox(contx);
+                                    },
+                                    child: Text("Confirm"),
+                                  ),
                                 ],
                               );
                             },

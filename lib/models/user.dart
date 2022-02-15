@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:wecare_logistics/models/api_url.dart';
 
 class User with ChangeNotifier {
   String id;
@@ -8,13 +9,13 @@ class User with ChangeNotifier {
   DateTime? expiresIn;
   final String email;
   final String password;
-  double walletBalance;
+  int walletBalance;
 
   User(
       {required this.id,
       required this.email,
       required this.password,
-      this.walletBalance = 0.0});
+      this.walletBalance = 0});
 /*   final String tokenId;
   final String token_expire;
   final String user_role; */
@@ -51,7 +52,11 @@ class UserProvider with ChangeNotifier {
   String userEmail = '';
   String userPassword = '';
   String userRole = '';
-  double walletBalance = 0.0;
+  int walletBalance = 0;
+
+  int get getWalletBalance {
+    return walletBalance;
+  }
 
   var _courierServiceUser1 = User(
       id: "dsa45556",
@@ -69,15 +74,11 @@ class UserProvider with ChangeNotifier {
     password: 'Raj',
   );
 
-  User getUser() {
-    return _courierServiceUser1;
-  }
-
   User getSenderUser2() {
     return _senderUser2;
   }
 
-  void transferAmount(double amount) {
+  void transferAmount(int amount) {
     _courierServiceUser1.walletBalance += amount;
     _senderUser2.walletBalance -= amount;
   }
@@ -156,8 +157,7 @@ class UserProvider with ChangeNotifier {
       userEmail = decodedJsonString['email'];
 
       if (method == "signUp") {
-        url = Uri.https(
-            'logistics-87e01-default-rtdb.firebaseio.com', '/users/$id.json');
+        url = Uri.https('${Api.url}', '/users/$id.json');
 
         var userResponse = await http.put(url,
             body: json.encode({
@@ -165,7 +165,7 @@ class UserProvider with ChangeNotifier {
               'lastName': lastName,
               'phoneNo': phoneNo,
               'email': email,
-              'walletBalance': walletBalance,
+              'walletBalance': this.walletBalance,
             }));
         if (userResponse.statusCode >= 400) {
           print(response.body);
@@ -174,8 +174,7 @@ class UserProvider with ChangeNotifier {
           return false;
         }
       } else {
-        url = Uri.https(
-            'logistics-87e01-default-rtdb.firebaseio.com', '/users/$id.json');
+        url = Uri.https('${Api.url}', '/users/$id.json');
 
         var response = await http.get(url);
 
@@ -201,11 +200,34 @@ class UserProvider with ChangeNotifier {
     return true;
   }
 
+  Future<void> addWalletBalance(int amount) async {
+    try {
+      var url = Uri.https('${Api.url}', 'users/$id.json');
+
+      var response = await http.patch(
+        url,
+        body: json.encode(
+          {
+            'walletBalance': walletBalance + amount,
+          },
+        ),
+      );
+
+      if (response.statusCode >= 400) {
+        print("Error occured in network call while adding money to wallet");
+        return;
+      }
+      this.walletBalance += amount;
+      notifyListeners();
+    } catch (error) {
+      print("error occured while add money to wallet");
+    }
+  }
+
   /*---- Assigning user it's role---- */
   Future<void> addUserRole(String role) async {
     try {
-      var url = Uri.https(
-          'logistics-87e01-default-rtdb.firebaseio.com', 'users/$id.json');
+      var url = Uri.https('${Api.url}', 'users/$id.json');
       var response = await http.patch(
         url,
         body: json.encode(

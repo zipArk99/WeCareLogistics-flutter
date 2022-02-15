@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:wecare_logistics/models/user.dart';
 import 'package:wecare_logistics/sender/screens/send_yourorder_tab.dart';
 import 'package:wecare_logistics/sender/screens/sender_tabs.dart';
 import 'package:wecare_logistics/sender/screens/user_profile.dart';
@@ -49,27 +51,31 @@ class DrawerScreen extends StatelessWidget {
                   Theme.of(contx).primaryColor,
                 ],
               )),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Shaurya P. Kaj",
-                    style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.w300,
-                      color: Colors.white,
-                    ),
-                  ),
-                  Text(
-                    "kajiwalaShaurya29@gmail.com",
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w100,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
+              child: Consumer<UserProvider>(
+                builder: (contx, user, child) {
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "${user.userFirstName}  ${user.userLastName}",
+                        style: TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.w300,
+                          color: Colors.white,
+                        ),
+                      ),
+                      Text(
+                        user.userEmail,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w100,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  );
+                },
               ),
             ),
             getListTile(

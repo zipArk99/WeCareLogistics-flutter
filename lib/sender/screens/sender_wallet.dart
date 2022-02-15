@@ -1,13 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:wecare_logistics/models/transaction_model.dart';
+import 'package:wecare_logistics/models/user.dart';
+import 'package:wecare_logistics/sender/widgets/add_money.dart';
 
 import 'package:wecare_logistics/sender/widgets/sender_appbar.dart';
 import 'package:wecare_logistics/sender/widgets/sender_lasttransactions.dart';
 
 /*   color: Color.fromRGBO(46, 157, 255, 1), */
-class SenderWallet extends StatelessWidget {
+class SenderWallet extends StatefulWidget {
   static final String senderWalletRoute = '/SenderWalletRoute';
+
+  @override
+  _SenderWalletState createState() => _SenderWalletState();
+}
+
+class _SenderWalletState extends State<SenderWallet> {
+  bool init = true;
+  bool isLoading = false;
+  @override
+  void didChangeDependencies() async {
+    if (init) {
+      setState(() {
+        isLoading = true;
+      });
+      await Provider.of<TransactionProvider>(context, listen: false)
+          .fetchTransactions();
+      setState(() {
+        isLoading = false;
+      });
+      init = false;
+    }
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext contx) {
+    var userWalletBalance = Provider.of<UserProvider>(contx).getWalletBalance;
+    List<Transcation> transactionList =
+        Provider.of<TransactionProvider>(contx).getTransactionList;
+    /* var Transaction = Provider.of<TransactionProvider>(contx) */
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(80),
@@ -28,9 +61,9 @@ class SenderWallet extends StatelessWidget {
                   Column(
                     children: [
                       Text(
-                        "\$20.749",
+                        "\u{20B9}$userWalletBalance",
                         style: TextStyle(
-                          fontSize: 40,
+                          fontSize: 30,
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
                         ),
@@ -43,7 +76,9 @@ class SenderWallet extends StatelessWidget {
                     height: 50,
                     margin: EdgeInsets.symmetric(vertical: 20),
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        AddMoneyDialogBox(contx);
+                      },
                       child: Text("Add Money"),
                     ),
                   ),
@@ -64,25 +99,38 @@ class SenderWallet extends StatelessWidget {
                   color: Colors.amber.shade300,
                   child: Column(
                     children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: 20),
+                      Container(
+                        alignment: Alignment.bottomLeft,
+                        padding:
+                            EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                         child: Text(
-                          "Last Transactions",
+                          "Last Transactions (3)",
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
                       ),
-                      Expanded(
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          itemBuilder: (contx, index) {
-                            return SenderLastTransactionsWidget();
-                          },
-                          itemCount: 3,
-                        ),
-                      ),
+                      isLoading
+                          ? Center(
+                              child: CircularProgressIndicator(),
+                            )
+                          : Expanded(
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                itemBuilder: (contx, index) {
+                                  return SenderLastTransactionsWidget(
+                                    courierName:
+                                        transactionList[index].courierName,
+                                    transactionDate:
+                                        transactionList[index].transactionDate,
+                                    transactionAmount: transactionList[index]
+                                        .transactionAmount,
+                                  );
+                                },
+                                itemCount: transactionList.length,
+                              ),
+                            ),
                     ],
                   ),
                 ),

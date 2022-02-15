@@ -14,27 +14,24 @@ class PublishedOrderTab extends StatelessWidget {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(5),
-              child: Card(
-                color: Colors.white60,
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: ListView.builder(
-                    itemBuilder: (contx, index) {
-                      return OrdersWidget(
-                        published:
-                            order.getPublishedOrderList()[index].published,
-                        key: Key(order.getPublishedOrderList()[index].orderId),
-                        id: order.getPublishedOrderList()[index].orderId,
-                        orderTitle:
-                            order.getPublishedOrderList()[index].orderTitle,
-                        pickUpLocation:
-                            order.getPublishedOrderList()[index].pickUpLocation,
-                        dropLocation:
-                            order.getPublishedOrderList()[index].dropLocation,
-                      );
-                    },
-                    itemCount: order.getPublishedOrderList().length,
-                  ),
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: ListView.builder(
+                  itemBuilder: (contx, index) {
+                    return OrdersWidget(
+                      count: index,
+                      published: order.getPublishedOrderList()[index].published,
+                      key: Key(order.getPublishedOrderList()[index].orderId),
+                      id: order.getPublishedOrderList()[index].orderId,
+                      orderTitle:
+                          order.getPublishedOrderList()[index].orderTitle,
+                      pickUpLocation:
+                          order.getPublishedOrderList()[index].pickUpLocation,
+                      dropLocation:
+                          order.getPublishedOrderList()[index].dropLocation,
+                    );
+                  },
+                  itemCount: order.getPublishedOrderList().length,
                 ),
               ),
             ),

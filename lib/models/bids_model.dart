@@ -3,14 +3,15 @@ import 'package:provider/provider.dart';
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:wecare_logistics/models/api_url.dart';
 
 import 'package:wecare_logistics/models/order_model.dart';
-import 'package:wecare_logistics/models/user.dart';
 
 class Bid {
   String orderId;
   String bidId;
   String courierId;
+  String courierName;
   double bidPrice;
   DateTime bidExpectedDeliveryDate;
   String modeOfTransport;
@@ -20,6 +21,7 @@ class Bid {
     required this.orderId,
     required this.bidId,
     required this.courierId,
+    required this.courierName,
     required this.bidPrice,
     required this.bidExpectedDeliveryDate,
     required this.modeOfTransport,
@@ -29,6 +31,7 @@ class Bid {
 
 class BidsProvider with ChangeNotifier {
   List<Order> _bidedOrderList = [];
+  List<Order> _publishOrderList = [];
   List<String> ordersId = [];
   final String user;
   BidsProvider({required this.user});
@@ -37,13 +40,13 @@ class BidsProvider with ChangeNotifier {
     print(order.orderId);
 
     try {
-      var url = Uri.https('logistics-87e01-default-rtdb.firebaseio.com',
-          'bids/${bid.orderId}.json');
+      var url = Uri.https('${Api.url}', 'bids/${bid.orderId}.json');
 
       var response = await http.post(
         url,
         body: json.encode(
           {
+            'courierName': bid.courierName,
             'courierId': user,
             'bidPrice': bid.bidPrice,
             'bidExpectedDeliveryDate':
@@ -65,6 +68,7 @@ class BidsProvider with ChangeNotifier {
           orderId: bid.orderId,
           bidId: decodedJsonString['name'],
           courierId: bid.courierId,
+          courierName: bid.courierName,
           bidPrice: bid.bidPrice,
           bidExpectedDeliveryDate: bid.bidExpectedDeliveryDate,
           modeOfTransport: bid.modeOfTransport,
@@ -73,16 +77,13 @@ class BidsProvider with ChangeNotifier {
       /*  order.bids.add(bid); */
       _bidedOrderList.add(order);
 
-      url = Uri.https('logistics-87e01-default-rtdb.firebaseio.com',
-          'bidedOrders/$user.json');
+      url = Uri.https('${Api.url}', 'bidedOrders/$user.json');
 
       response = await http.post(
         url,
-        body: json.encode(
-          {
-            'orderId': order.orderId,
-          },
-        ),
+        body: json.encode({
+          'orderId': order.orderId
+        }),
       );
 
       notifyListeners();
@@ -92,10 +93,9 @@ class BidsProvider with ChangeNotifier {
   }
 
   Future<List<String>> fetchBidedOrderList() async {
-    List<String> orderIds = [];
+    List<String> tempId = [];
     try {
-      var url = Uri.https('logistics-87e01-default-rtdb.firebaseio.com',
-          'bidedOrders/$user.json');
+      var url = Uri.https('${Api.url}', 'bidedOrders/$user.json');
 
       var response = await http.get(url);
       if (response.statusCode >= 400) {
@@ -107,20 +107,21 @@ class BidsProvider with ChangeNotifier {
       decodedJsonString.forEach(
         (bidedOrderId, orderData) {
           print("inside bided order::" + orderData['orderId']);
-          orderIds.add(orderData['orderId']);
+          tempId.add(orderData['orderId']);
         },
       );
+      ordersId = [...tempId];
     } catch (error) {
       print(
           "error occured while fetching bided order list::" + error.toString());
     }
-    return orderIds;
+    return ordersId;
   }
 
 /*   Future<void> fetchBid() async {
     try {
       var url = Uri.https(
-        'logistics-87e01-default-rtdb.firebaseio.com',
+        '${Api.url}',
         'bids.json',
         {
           'orderBy': json.encode('courierId'),
@@ -173,12 +174,140 @@ class BidsProvider with ChangeNotifier {
     setBidedOrderList = [...tempOrder];
   }
 
+  Future<void> fetchFilteredPublishList(BuildContext context) async {
+    try {
+      await filterBidedOrders(context);
+
+      var url = Uri.https(
+        '${Api.url}',
+        'orders.json',
+        {
+          'orderBy': json.encode("orderPublishStatus"),
+          'equalTo': json.encode(true),
+        },
+      );
+
+      var response = await http.get(url);
+      if (response.statusCode >= 400) {
+        print(
+            "network call error occured while fetching published orders for courier service");
+        return;
+      }
+
+      var decodedJsonString =
+          json.decode(response.body) as Map<String, dynamic>;
+      List<Order> tempPublishOrder = [];
+      List<Order> tempBidedOrders = [];
+      decodedJsonString.forEach(
+        (orderId, orderValue) {
+          var order = Order(
+            senderId: orderValue['senderId'].toString(),
+            orderId: orderId.toString(),
+            bidSelected: orderValue['bidSelected'],
+            orderTitle: orderValue['orderTitle'],
+            productCategory: orderValue['orderCategory'],
+            productQuantity: orderValue['productQuantity'],
+            productPrice: orderValue['productPrice'],
+            orderLendth: orderValue['orderLength'],
+            orderBreadth: orderValue['orderBreadth'],
+            orderHeight: orderValue['orderHeight'],
+            orderWeight: orderValue['orderWeight'],
+            expectedDelivery:
+                DateTime.parse(orderValue['expectedDeliveryDate']),
+            pickUpLocation: orderValue['pickUpLocation'],
+            reciverName: orderValue['reciverName'],
+            dropLocation: orderValue['dropLocation'],
+            pinCode: orderValue['deliveryPincode'],
+            orderCreatedOn: DateTime.parse(orderValue['orderCreatedOn']),
+            published: orderValue['orderPublishStatus'],
+          );
+          if (!ordersId.contains(orderId)) {
+            tempPublishOrder.add(order);
+          } else {
+            tempBidedOrders.add(order);
+          }
+        },
+      );
+      setPublishOrderList = [...tempPublishOrder];
+      setBidedOrderList = [...tempBidedOrders];
+    } catch (error) {
+      print(
+          "error occured while fetching published orders for courier service::" +
+              error.toString());
+    }
+  }
+
+  Future<void> fetchOrderBids(String orderId) async {
+    try {
+      var url = Uri.https('${Api.url}', 'bids/$orderId.json');
+      var response = await http.get(url);
+
+      if (response.statusCode >= 400) {
+        print("error occured in network call while fetching data");
+        return;
+      }
+      List<Bid> tempbid = [];
+      var decodedJsonString =
+          json.decode(response.body) as Map<String, dynamic>;
+
+      decodedJsonString.forEach(
+        (bidId, bidData) {
+          tempbid.add(
+            Bid(
+              orderId: orderId,
+              bidId: bidId,
+              courierId: bidData['courierId'],
+              courierName: bidData['courierName'],
+              bidPrice: bidData['bidPrice'],
+              bidExpectedDeliveryDate:
+                  DateTime.parse(bidData['bidExpectedDeliveryDate']),
+              modeOfTransport: bidData['modeOfTransport'],
+              bidcreatedOn: DateTime.parse(bidData['bidCreatedOn']),
+            ),
+          );
+        },
+      );
+
+      var order = getSingleOrder(orderId);
+      order.bids = [...tempbid];
+      print(response.body);
+    } catch (error) {
+      print("error occured while fetching bids::" + error.toString());
+    }
+  }
+
+  Bid getCourierBid(String orderId) {
+    var order = getSingleOrder(orderId);
+
+    Bid bid = order.bids.firstWhere((element) {
+      return element.courierId == user;
+    });
+
+    return bid;
+  }
+
   List<Order> get getBidedOrderList {
-    return _bidedOrderList;
+    return [..._bidedOrderList];
+  }
+
+  List<Order> get getPubishOrderList {
+    return [..._publishOrderList];
+  }
+
+  Order getSingleOrder(String orderId) {
+    List<Order> tempOrders = [];
+    tempOrders = [...getPubishOrderList, ...getBidedOrderList];
+    return tempOrders.firstWhere((element) {
+      return element.orderId == orderId;
+    });
   }
 
   set setBidedOrderList(List<Order> orders) {
     _bidedOrderList = [...orders];
+  }
+
+  set setPublishOrderList(List<Order> orders) {
+    _publishOrderList = [...orders];
   }
 
   void editBid(Order order, String userId, Bid bidElement) async {
@@ -195,26 +324,5 @@ class BidsProvider with ChangeNotifier {
       notifyListeners();
       return true;
     } */
-  }
-
-  List<Order> checkUserBid(BuildContext contx) {
-    List<Order> tempOrder = [];
-    var publishOrderList = Provider.of<OrdersProvider>(contx, listen: false)
-        .getPublishedOrderList();
-    var user = Provider.of<UserProvider>(contx, listen: false);
-
-    for (int i = 0; i < publishOrderList.length; i++) {
-      if (publishOrderList[i].bids.isNotEmpty) {
-        publishOrderList[i].bids.forEach((element) {
-          if (element.courierId == user.getUser().id) {
-          } else {
-            tempOrder.add(publishOrderList[i]);
-          }
-        });
-      } else {
-        tempOrder.add(publishOrderList[i]);
-      }
-    }
-    return tempOrder;
   }
 }

@@ -62,7 +62,14 @@ class _SenderHomePageScreenState extends State<SenderHomePageScreen> {
               createHomePageContainer(),
             ],
           ),
-          Text("Orders"),
+          Container(
+            alignment: Alignment.bottomLeft,
+            margin: EdgeInsets.only(top: 20, left: 20),
+            child: Text(
+              "Orders " + "( ${order.getOrderList().length} )",
+              style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+            ),
+          ),
           order.getOrderList().isEmpty
               ? Padding(
                   padding: const EdgeInsets.symmetric(vertical: 80),
@@ -79,8 +86,8 @@ class _SenderHomePageScreenState extends State<SenderHomePageScreen> {
                         height: 20,
                       ),
                       Container(
-                        width: 150,
-                        height: 150,
+                        width: 100,
+                        height: 100,
                         child: Image.asset(
                           'lib/assets/images/waiting.png',
                           fit: BoxFit.contain,
@@ -99,6 +106,7 @@ class _SenderHomePageScreenState extends State<SenderHomePageScreen> {
                         child: ListView.builder(
                           itemBuilder: (contx, index) {
                             return OrdersWidget(
+                              count: index,
                               published: order.getOrderList()[index].published,
                               key: Key(order.getOrderList()[index].orderId),
                               id: order.getOrderList()[index].orderId,

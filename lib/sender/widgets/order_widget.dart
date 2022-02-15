@@ -1,8 +1,5 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:wecare_logistics/models/bids_model.dart';
 
 import 'package:wecare_logistics/models/order_model.dart';
 
@@ -14,14 +11,15 @@ class OrdersWidget extends StatefulWidget {
   final String pickUpLocation;
   final String dropLocation;
   final bool published;
-
+  int count;
   OrdersWidget(
       {required Key key,
       required this.id,
       required this.orderTitle,
       required this.pickUpLocation,
       required this.dropLocation,
-      required this.published})
+      required this.published,
+      required this.count})
       : super(key: key);
 
   @override
@@ -29,8 +27,6 @@ class OrdersWidget extends StatefulWidget {
 }
 
 class _OrdersWidgetState extends State<OrdersWidget> {
-  final String orderId = Random().nextInt(1000).toString();
-
   @override
   void didChangeDependencies() {
     if (widget.published) {
@@ -60,7 +56,10 @@ class _OrdersWidgetState extends State<OrdersWidget> {
           leading: CircleAvatar(
             backgroundColor: Colors.amber,
             radius: 30,
-            child: Text("#" + orderId),
+            child: Text(
+              "${++widget.count}",
+              style: TextStyle(fontSize: 25),
+            ),
           ),
           title: Text(widget.orderTitle),
           subtitle: Text(
