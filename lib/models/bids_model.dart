@@ -77,13 +77,12 @@ class BidsProvider with ChangeNotifier {
       /*  order.bids.add(bid); */
       _bidedOrderList.add(order);
 
-      url = Uri.https('${Api.url}', 'bidedOrders/$user.json');
+      url = Uri.https(
+          '${Api.url}', 'bidedOrders/$user/${order.orderId.toString()}.json');
 
-      response = await http.post(
+      response = await http.put(
         url,
-        body: json.encode({
-          'orderId': order.orderId
-        }),
+        body: json.encode(order.orderId),
       );
 
       notifyListeners();
@@ -103,11 +102,11 @@ class BidsProvider with ChangeNotifier {
       }
 
       var decodedJsonString =
-          json.decode(response.body) as Map<String, dynamic>;
+          json.decode(response.body) as Map<dynamic, dynamic>;
       decodedJsonString.forEach(
         (bidedOrderId, orderData) {
-          print("inside bided order::" + orderData['orderId']);
-          tempId.add(orderData['orderId']);
+          print("inside bided order::" + decodedJsonString[bidedOrderId]);
+          tempId.add(decodedJsonString[bidedOrderId]);
         },
       );
       ordersId = [...tempId];
@@ -324,5 +323,45 @@ class BidsProvider with ChangeNotifier {
       notifyListeners();
       return true;
     } */
+  }
+
+  Future<void> deleteBids(Order order) async {
+    try {
+      var url = Uri.https('${Api.url}', 'bids/${order.orderId}.json');
+      var response = await http.delete(url);
+      if (response.statusCode >= 400) {
+        print("Network call error occured while deleting bids");
+        return;
+      }
+      notifyListeners();
+      print("---bids deleted successfully---");
+    } catch (error) {
+      print("Error occured while deleting bids::" + error.toString());
+    }
+  }
+
+  Future<void> deleteBidedOrders(Order order, String bidId) async {
+    try {
+      var bid = order.bids.firstWhere(
+        (element) {
+          return element.bidId == bidId;
+        },
+      );
+      print("orderId::" + order.orderId);
+      var url = Uri.https(
+          '${Api.url}', 'bidedOrders/${bid.courierId}/${order.orderId}.json');
+      var response = await http.delete(url);
+      if (response.statusCode >= 400) {
+        print("Network call error occured while deleting bidedOrder");
+        print(response.body);
+        return;
+      }
+      print("bidId::" + bid.courierId);
+      print(response.body);
+      notifyListeners();
+      print("---bidedOrder deleted successfully---");
+    } catch (error) {
+      print("Error occured while deleting bidedOrderList::" + error.toString());
+    }
   }
 }

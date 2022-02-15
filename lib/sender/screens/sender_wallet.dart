@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:wecare_logistics/models/transaction_model.dart';
 import 'package:wecare_logistics/models/user.dart';
@@ -11,9 +10,12 @@ import 'package:wecare_logistics/sender/widgets/sender_lasttransactions.dart';
 /*   color: Color.fromRGBO(46, 157, 255, 1), */
 class SenderWallet extends StatefulWidget {
   static final String senderWalletRoute = '/SenderWalletRoute';
-
+ 
   @override
-  _SenderWalletState createState() => _SenderWalletState();
+  _SenderWalletState createState() {
+   
+    return _SenderWalletState();
+  }
 }
 
 class _SenderWalletState extends State<SenderWallet> {

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:wecare_logistics/models/order_model.dart';
 import 'package:wecare_logistics/models/your_order.dart';
 import 'package:wecare_logistics/sender/widgets/yourorder_widget.dart';
 

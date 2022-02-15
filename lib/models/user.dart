@@ -58,30 +58,6 @@ class UserProvider with ChangeNotifier {
     return walletBalance;
   }
 
-  var _courierServiceUser1 = User(
-      id: "dsa45556",
-      email: "KajiwalaShaurya29@gmail.com",
-      password: 'shaunpur');
-  var _senderUser2 = User(
-    id: "789poip",
-    email: "KajiwalaShaurya123@gmail.com",
-    password: 'shaun',
-  );
-
-  var _courierServiceUser2 = User(
-    id: "ds6466ff",
-    email: "raj123@gmail.com",
-    password: 'Raj',
-  );
-
-  User getSenderUser2() {
-    return _senderUser2;
-  }
-
-  void transferAmount(int amount) {
-    _courierServiceUser1.walletBalance += amount;
-    _senderUser2.walletBalance -= amount;
-  }
 
   Future<void> registerUser(
       {String email = "",
