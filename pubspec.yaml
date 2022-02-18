@@ -34,11 +34,16 @@ dependencies:
   convert: ^3.0.1
   flutter_rating_bar: ^4.0.0
   http: ^0.13.3
-
+  pdf: ^3.6.4
+  flutter_full_pdf_viewer: ^1.0.6
+  path_provider: ^2.0.1
+  open_file: ^3.2.1
+  syncfusion_flutter_barcodes: ^19.4.52
+  
 
 
 dev_dependencies:
-  flutter_test:
+  flutter_test: 
     sdk: flutter
 
 # For information on the generic Dart part of this file, see the

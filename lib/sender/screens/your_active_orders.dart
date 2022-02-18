@@ -38,6 +38,8 @@ class _YourActiveOrdersState extends State<YourActiveOrders> {
         : ListView.builder(
             itemBuilder: (contx, index) {
               return YourOrderWidget(
+                  yourOrderWeight: yourOrderList[index].order.orderWeight,
+                  yourOrderPickUp: yourOrderList[index].order.pickUpLocation,
                   yourOrderId: yourOrderList[index].yourOrderId,
                   yourOrderDate: yourOrderList[index].yourOrderDate,
                   reciverName: yourOrderList[index].order.reciverName,

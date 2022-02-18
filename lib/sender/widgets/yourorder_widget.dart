@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wecare_logistics/models/generate_label.dart';
 
 class YourOrderWidget extends StatelessWidget {
   final String yourOrderId;
@@ -8,6 +9,8 @@ class YourOrderWidget extends StatelessWidget {
   final String dropLocation;
   final String courierServiceName;
   final double price;
+  final double yourOrderWeight;
+  final String yourOrderPickUp;
 
   YourOrderWidget({
     required this.yourOrderId,
@@ -17,6 +20,8 @@ class YourOrderWidget extends StatelessWidget {
     required this.dropLocation,
     required this.courierServiceName,
     required this.price,
+    required this.yourOrderWeight,
+    required this.yourOrderPickUp,
   });
 
   void openOptionsDialogBox(BuildContext contx) {
@@ -35,9 +40,9 @@ class YourOrderWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                dialogOptions("Download Label"),
-                dialogOptions("Download Invoice"),
-                dialogOptions("Order Details"),
+                dialogOptions("Download Label", contx),
+                dialogOptions("Download Invoice", contx),
+                dialogOptions("Order Details", contx),
               ],
             ),
           ),
@@ -46,12 +51,23 @@ class YourOrderWidget extends StatelessWidget {
     );
   }
 
-  Widget dialogOptions(String title) {
+  Widget dialogOptions(String title, BuildContext contx) {
     return Flexible(
       flex: 1,
       fit: FlexFit.tight,
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          var label = Label(
+              mailType: 'PRIORITY MAIL',
+              weight: yourOrderWeight,
+              senderName: 'Shaun shah',
+              reciverName: reciverName,
+              pickUp: yourOrderPickUp,
+              drop: dropLocation,
+              orderId: yourOrderId);
+          label.generateLableClass(contx);
+          Navigator.of(contx).pop();
+        },
         child: Container(
           alignment: Alignment.center,
           child: Text(
