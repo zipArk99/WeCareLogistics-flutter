@@ -18,7 +18,7 @@ class _YourActiveOrdersState extends State<YourActiveOrders> {
         isLoading = true;
       });
       await Provider.of<YourOrderProvider>(context, listen: false)
-          .fetchYourOrder();
+          .fetchYourOrder(true);
       setState(() {
         isLoading = false;
       });

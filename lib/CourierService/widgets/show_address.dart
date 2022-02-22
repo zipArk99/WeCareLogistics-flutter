@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 
 class ShowAddress extends StatefulWidget {
+  String pickUpLocation;
+  String dropLocation;
+
+  ShowAddress({
+    required this.pickUpLocation,
+    required this.dropLocation,
+  });
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return ShowAddressState();
   }
 }
@@ -17,34 +23,37 @@ class ShowAddressState extends State<ShowAddress> {
       child: Column(
         children: [
           ListTile(
-              leading: Icon(
-                Icons.location_on_outlined,
-                size: 35,
-                color: Colors.black,
+            leading: Icon(
+              Icons.location_on_outlined,
+              size: 35,
+              color: Colors.black,
+            ),
+            title: Text(
+              "${widget.pickUpLocation} --> ${widget.dropLocation}",
+              style: TextStyle(fontFamily: 'Poppins', fontSize: 12),
+            ),
+            trailing: Material(
+              color: Colors.teal.shade300,
+              child: IconButton(
+                onPressed: () {
+                  setState(() {
+                    isDown = !isDown;
+                  });
+                },
+                icon: isDown
+                    ? Icon(
+                        Icons.arrow_circle_up,
+                        color: Colors.black,
+                        size: 30,
+                      )
+                    : Icon(
+                        Icons.arrow_circle_down,
+                        color: Colors.black,
+                        size: 30,
+                      ),
               ),
-              title: Text(
-                "Ahmedabad --> Mumbai",
-                style: TextStyle(fontFamily: 'Poppins', fontSize: 12),
-              ),
-              trailing: Material(
-                color: Colors.teal.shade300,
-                child: IconButton(
-                  onPressed: () {
-                    setState(() {
-                      isDown = !isDown;
-                    });
-                  },
-                  icon: isDown
-                      ? Icon(
-                          Icons.arrow_upward,
-                          color: Colors.black,
-                        )
-                      : Icon(
-                          Icons.arrow_downward,
-                          color: Colors.black,
-                        ),
-                ),
-              )),
+            ),
+          ),
           if (isDown)
             Container(
               margin: EdgeInsets.symmetric(horizontal: 40),

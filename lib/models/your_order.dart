@@ -12,6 +12,7 @@ class YourOrder {
     required this.yourOrderDate,
     this.orderStatus = 'InActive',
     this.yourOrderId = '',
+    required this.courierId,
   });
 
   final Order order;
@@ -19,6 +20,7 @@ class YourOrder {
   final Map<String, dynamic> selectedBid;
   late DateTime yourOrderDate;
   late String yourOrderId;
+  late String courierId;
 }
 
 class YourOrderProvider with ChangeNotifier {
@@ -68,10 +70,10 @@ class YourOrderProvider with ChangeNotifier {
             'orderCreatedOn': order.orderCreatedOn.toIso8601String(),
             'orderPublishStatus': order.published,
             'yourOrderStatus': 'Inactive',
+            'courierId': bid.courierId,
             'yourOrderDate': DateTime.now().toIso8601String(),
             'selectedBid': {
               'courierName': bid.courierName,
-              'courierId': bid.courierId,
               'bidPrice': bid.bidPrice,
               'bidExpectedDeliveryDate':
                   bid.bidExpectedDeliveryDate.toIso8601String(),
@@ -110,17 +112,28 @@ class YourOrderProvider with ChangeNotifier {
     }
   }
 
-  Future<void> fetchYourOrder() async {
+  Future<void> fetchYourOrder(bool isSender) async {
     try {
-      var url = Uri.https(
-        '${Api.url}',
-        'yourOrders.json',
-        {
-          'orderBy': json.encode("senderId"),
-          'equalTo': json.encode(userId),
-        },
-      );
-
+      Uri url;
+      if (isSender) {
+        url = Uri.https(
+          '${Api.url}',
+          'yourOrders.json',
+          {
+            'orderBy': json.encode("senderId"),
+            'equalTo': json.encode(userId),
+          },
+        );
+      } else {
+        url = Uri.https(
+          '${Api.url}',
+          'yourOrders.json',
+          {
+            'orderBy': json.encode("courierId"),
+            'equalTo': json.encode(userId),
+          },
+        );
+      }
       var reponse = await http.get(url);
 
       if (reponse.statusCode >= 400) {
@@ -154,7 +167,6 @@ class YourOrderProvider with ChangeNotifier {
           );
           Map<String, dynamic> tempBid = {
             'courierName': yourOrderValue['selectedBid']['courierName'],
-            'courierId': yourOrderValue['selectedBid']['courierId'],
             'bidPrice': yourOrderValue['selectedBid']['bidPrice'],
             'bidExpectedDeliveryDate': DateTime.parse(
                 yourOrderValue['selectedBid']['bidExpectedDeliveryDate']),
@@ -163,6 +175,7 @@ class YourOrderProvider with ChangeNotifier {
                 DateTime.parse(yourOrderValue['selectedBid']['bidCreatedOn']),
           };
           temp.add(YourOrder(
+              courierId: yourOrderValue['selectedBid']['courierId'],
               yourOrderDate: DateTime.parse(yourOrderValue['yourOrderDate']),
               yourOrderId: yourOrderId,
               order: order,

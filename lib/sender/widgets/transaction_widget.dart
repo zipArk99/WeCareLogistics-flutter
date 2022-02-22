@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:wecare_logistics/Exceptions/not_enough_balance.dart';
 import 'package:wecare_logistics/models/bids_model.dart';
 import 'package:wecare_logistics/models/order_model.dart';
 import 'package:wecare_logistics/models/transaction_model.dart';
+import 'package:wecare_logistics/models/user.dart';
 import 'package:wecare_logistics/models/your_order.dart';
 import 'package:wecare_logistics/sender/screens/send_yourorder_tab.dart';
+import 'package:wecare_logistics/sender/screens/sender_wallet.dart';
 
 class TransactionDialogBox {
   TransactionDialogBox(
@@ -100,36 +103,82 @@ class TransactionWidgetState extends State<TransactionWidget> {
                   margin: EdgeInsets.symmetric(horizontal: 20),
                   child: ElevatedButton(
                     onPressed: () async {
-                      setState(() {
-                        isLoading = true;
-                      });
-                      var transactionId = '';
+                      var user = Provider.of<UserProvider>(context,listen:false);
 
-                      transactionId = await Provider.of<TransactionProvider>(
-                              contx,
-                              listen: false)
-                          .proccessTransaction(
-                        courierName: widget.courierName,
-                        courierId: widget.courierId,
-                        transactionType: 'payment',
-                        bidId: widget.bidId,
-                        senderId: widget.order.senderId,
-                        transactionAmount: widget.price,
-                      );
-                      var bid = Provider.of<BidsProvider>(contx, listen: false);
+                      if (user.checkWalletBalance(widget.price)) {
+                        setState(() {
+                          isLoading = true;
+                        });
+                        var transactionId = '';
 
-                      await Provider.of<YourOrderProvider>(contx, listen: false)
-                          .addYourOrder(
-                              widget.order, widget.bidId, transactionId);
+                        transactionId = await Provider.of<TransactionProvider>(
+                                contx,
+                                listen: false)
+                            .proccessTransaction(
+                          courierName: widget.courierName,
+                          courierId: widget.courierId,
+                          transactionType: 'payment',
+                          bidId: widget.bidId,
+                          senderId: widget.order.senderId,
+                          transactionAmount: widget.price,
+                        );
 
-                      await bid.deleteBidedOrders(widget.order, widget.bidId);
-                      await bid.deleteBids(widget.order);
+                        var bid =
+                            Provider.of<BidsProvider>(contx, listen: false);
 
-                      await Provider.of<OrdersProvider>(contx, listen: false)
-                          .deleteOrder(widget.order.orderId);
+                        await Provider.of<YourOrderProvider>(contx,
+                                listen: false)
+                            .addYourOrder(
+                                widget.order, widget.bidId, transactionId);
+                        await user.walletTransaction(
+                                amount: widget.price,
+                                courierId: widget.courierId);
 
-                      Navigator.of(contx).pushReplacementNamed(
-                          SenderYourOrderTabs.senderYourOrderTabsRoute);
+                        await bid.deleteBidedOrders(widget.order, widget.bidId);
+                        await bid.deleteBids(widget.order);
+
+                        await Provider.of<OrdersProvider>(contx, listen: false)
+                            .deleteOrder(widget.order.orderId);
+
+                        Navigator.of(contx).pushReplacementNamed(
+                            SenderYourOrderTabs.senderYourOrderTabsRoute);
+                      } else {
+                        Navigator.of(context).pop();
+
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                content: Text(
+                                  "Insufficient Blanace add money to wallet !",
+                                  style: TextStyle(
+                                      color: Theme.of(context).errorColor),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    style: TextButton.styleFrom(
+                                      primary: Colors.green,
+                                    ),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                      Navigator.of(context).pushNamed(
+                                          SenderWallet.senderWalletRoute);
+                                    },
+                                    child: Text("OK"),
+                                  ),
+                                  TextButton(
+                                    style: TextButton.styleFrom(
+                                      primary: Colors.red,
+                                    ),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text("Cancel"),
+                                  ),
+                                ],
+                              );
+                            });
+                      }
                     },
                     child: Text("PAY"),
                   ),

@@ -103,6 +103,11 @@ class CourierDrawer extends StatelessWidget {
             drawerTitle: "Settings",
             contx: contx,
           ),
+          getListTile(
+            icon: Icons.qr_code_scanner_rounded,
+            drawerTitle: "Scan QR",
+            contx: contx,
+          )
         ],
       ),
     );

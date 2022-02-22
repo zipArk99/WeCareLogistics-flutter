@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wecare_logistics/CourierService/screens/courier_wallet.dart';
 
 class CourierAppBar extends StatelessWidget {
   final String barTitle;
@@ -22,8 +23,18 @@ class CourierAppBar extends StatelessWidget {
       ),
       title: Text(barTitle),
       actions: [
+        if(barTitle!='Wallet')
         Padding(
-          padding: const EdgeInsets.all(10),
+          padding: EdgeInsets.all(5),
+          child: IconButton(
+            onPressed: () {
+              Navigator.of(contx).pushNamed(CourierWallet.courierWalletRoute);
+            },
+            icon: Icon(Icons.account_balance_wallet_sharp),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(5),
           child: IconButton(
               onPressed: () {}, icon: Icon(Icons.notifications_on_sharp)),
         )

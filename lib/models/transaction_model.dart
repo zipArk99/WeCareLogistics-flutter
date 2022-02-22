@@ -1,8 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:wecare_logistics/Exceptions/not_enough_balance.dart';
 
 import 'package:wecare_logistics/models/api_url.dart';
+import 'package:wecare_logistics/models/user.dart';
 
 class Transcation {
   final String courierName;
@@ -23,7 +25,6 @@ class Transcation {
     required this.transactionAmount,
     required this.transactionDate,
     required this.courierName,
-    
   });
 }
 
@@ -54,7 +55,7 @@ class TransactionProvider extends ChangeNotifier {
             'courierId': courierId,
             'senderId': senderId,
             'transactionType': transactionType,
-            'yourOrderId':'',
+            'yourOrderId': '',
             'transactionAmount': transactionAmount,
             'transactionDate': transDate.toIso8601String(),
           },
@@ -89,16 +90,29 @@ class TransactionProvider extends ChangeNotifier {
   }
 
   //Used to fetch transactions from server
-  Future<void> fetchTransactions() async {
+  Future<void> fetchTransactions(bool isSender) async {
     try {
-      var url = Uri.https(
-        '${Api.url}',
-        'transactions.json',
-        {
-          'orderBy': json.encode("senderId"),
-          'equalTo': json.encode(userId),
-        },
-      );
+      var url;
+
+      if (isSender) {
+        url = Uri.https(
+          '${Api.url}',
+          'transactions.json',
+          {
+            'orderBy': json.encode("senderId"),
+            'equalTo': json.encode(userId),
+          },
+        );
+      } else {
+        url = Uri.https(
+          '${Api.url}',
+          'transactions.json',
+          {
+            'orderBy': json.encode("courierId"),
+            'equalTo': json.encode(userId),
+          },
+        );
+      }
 
       var response = await http.get(url);
       if (response.statusCode >= 400) {
