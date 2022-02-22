@@ -58,29 +58,12 @@ class UserProvider with ChangeNotifier {
     return walletBalance;
   }
 
-  var _courierServiceUser1 = User(
-      id: "dsa45556",
-      email: "KajiwalaShaurya29@gmail.com",
-      password: 'shaunpur');
-  var _senderUser2 = User(
-    id: "789poip",
-    email: "KajiwalaShaurya123@gmail.com",
-    password: 'shaun',
-  );
-
-  var _courierServiceUser2 = User(
-    id: "ds6466ff",
-    email: "raj123@gmail.com",
-    password: 'Raj',
-  );
-
-  User getSenderUser2() {
-    return _senderUser2;
+  set setWalletBalance(int amount) {
+    walletBalance = walletBalance + amount;
   }
 
-  void transferAmount(int amount) {
-    _courierServiceUser1.walletBalance += amount;
-    _senderUser2.walletBalance -= amount;
+  set minusWalletBalance(int amount) {
+    walletBalance = walletBalance - amount;
   }
 
   Future<void> registerUser(
@@ -195,9 +178,17 @@ class UserProvider with ChangeNotifier {
 
       print(response.body);
     } catch (error) {
-      print(error);
+      print("error occured while logging::"+error.toString());
     }
     return true;
+  }
+
+  bool checkWalletBalance(double transactionAmount) {
+    print("wallet balance::" + getWalletBalance.toString());
+    if (getWalletBalance >= transactionAmount) {
+      return true;
+    }
+    return false;
   }
 
   Future<void> addWalletBalance(int amount) async {
@@ -208,7 +199,7 @@ class UserProvider with ChangeNotifier {
         url,
         body: json.encode(
           {
-            'walletBalance': walletBalance + amount,
+            'walletBalance': this.walletBalance + amount,
           },
         ),
       );
@@ -217,10 +208,63 @@ class UserProvider with ChangeNotifier {
         print("Error occured in network call while adding money to wallet");
         return;
       }
-      this.walletBalance += amount;
+      setWalletBalance = amount;
       notifyListeners();
     } catch (error) {
       print("error occured while add money to wallet");
+    }
+  }
+
+  Future<int?> fetchCourierWalletBalance(String userId) async {
+    try {
+      var url = Uri.https('${Api.url}', 'users/$userId/walletBalance.json');
+
+      var repsonse = await http.get(url);
+
+      if (repsonse.statusCode >= 400) {
+        print(
+            "Network call error occured while fething courier wallet balance");
+        return 0;
+      }
+      print("---courier service balance fetched successfully---");
+      var walletBalance = json.decode(repsonse.body) as int;
+
+      return walletBalance;
+    } catch (error) {
+      print("Error occured while fetching Courier Wallet Balance::" +
+          error.toString());
+    }
+  }
+
+  Future<void> walletTransaction(
+      {required double amount, required String courierId}) async {
+    try {
+      var senderUrl = Uri.https('${Api.url}', 'users/$id.json');
+      var courierUrl = Uri.https('${Api.url}', 'users/$courierId.json');
+      await http.patch(
+        senderUrl,
+        body: json.encode(
+          {'walletBalance': walletBalance - amount.toInt()},
+        ),
+      );
+
+      minusWalletBalance = amount.toInt();
+      int courierWalletBalance =
+          await fetchCourierWalletBalance(courierId) as int;
+
+      await http.patch(
+        courierUrl,
+        body: json.encode(
+          {
+            'walletBalance': courierWalletBalance + amount.toInt(),
+          },
+        ),
+      );
+      notifyListeners();
+    } catch (error) {
+      print(
+        "Error occured while debiting amount from wallet::" + error.toString(),
+      );
     }
   }
 

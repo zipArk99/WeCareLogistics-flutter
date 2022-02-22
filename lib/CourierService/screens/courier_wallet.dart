@@ -1,38 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:wecare_logistics/CourierService/widgets/courier_appbar.dart';
 import 'package:wecare_logistics/models/transaction_model.dart';
 import 'package:wecare_logistics/models/user.dart';
-import 'package:wecare_logistics/sender/widgets/add_money.dart';
-
-import 'package:wecare_logistics/sender/widgets/sender_appbar.dart';
 import 'package:wecare_logistics/sender/widgets/sender_lasttransactions.dart';
 
-/*   color: Color.fromRGBO(46, 157, 255, 1), */
-class SenderWallet extends StatefulWidget {
-  static final String senderWalletRoute = '/SenderWalletRoute';
- 
+class CourierWallet extends StatefulWidget {
+  static String courierWalletRoute = '/CourierWalletRoute';
+
   @override
-  _SenderWalletState createState() {
-   
-    return _SenderWalletState();
-  }
+  _CourierWalletState createState() => _CourierWalletState();
 }
 
-class _SenderWalletState extends State<SenderWallet> {
-  bool init = true;
+class _CourierWalletState extends State<CourierWallet> {
   bool isLoading = false;
-  @override
+  bool isInit = true;
   void didChangeDependencies() async {
-    if (init) {
+    if (isInit) {
       setState(() {
         isLoading = true;
       });
       await Provider.of<TransactionProvider>(context, listen: false)
-          .fetchTransactions(true);
+          .fetchTransactions(false);
       setState(() {
         isLoading = false;
       });
-      init = false;
+      isInit = false;
     }
     super.didChangeDependencies();
   }
@@ -42,11 +35,10 @@ class _SenderWalletState extends State<SenderWallet> {
     var userWalletBalance = Provider.of<UserProvider>(contx).getWalletBalance;
     List<Transcation> transactionList =
         Provider.of<TransactionProvider>(contx).getTransactionList;
-    /* var Transaction = Provider.of<TransactionProvider>(contx) */
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(80),
-        child: SenderAppBar(
+        child: CourierAppBar(
           barTitle: "Wallet",
         ),
       ),
@@ -78,10 +70,8 @@ class _SenderWalletState extends State<SenderWallet> {
                     height: 50,
                     margin: EdgeInsets.symmetric(vertical: 20),
                     child: ElevatedButton(
-                      onPressed: () {
-                        AddMoneyDialogBox(contx);
-                      },
-                      child: Text("Add Money"),
+                      onPressed: () {},
+                      child: Text("Withdraw Money"),
                     ),
                   ),
                 ],
@@ -122,15 +112,14 @@ class _SenderWalletState extends State<SenderWallet> {
                                 shrinkWrap: true,
                                 itemBuilder: (contx, index) {
                                   return SenderLastTransactionsWidget(
-                                    isSender:true,
-                                    senderName:'Shaurya kaj',
-                                    courierName:
-                                        transactionList[index].courierName,
-                                    transactionDate:
-                                        transactionList[index].transactionDate,
-                                    transactionAmount: transactionList[index]
-                                        .transactionAmount,
-                                  );
+                                      courierName:
+                                          transactionList[index].courierName,
+                                      transactionAmount: transactionList[index]
+                                          .transactionAmount,
+                                      transactionDate: transactionList[index]
+                                          .transactionDate,
+                                      isSender: false,
+                                      senderName: 'Shaurya kaj');
                                 },
                                 itemCount: transactionList.length,
                               ),

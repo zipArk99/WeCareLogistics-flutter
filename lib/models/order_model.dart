@@ -346,8 +346,6 @@ class OrdersProvider with ChangeNotifier {
     notifyListeners();
   }
 
- 
-
   Future<void> fetchOrderBids(String orderId) async {
     try {
       var url = Uri.https('${Api.url}', 'bids/$orderId.json');

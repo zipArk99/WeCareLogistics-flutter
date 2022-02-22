@@ -86,8 +86,8 @@ class OrderDetailScreen extends StatelessWidget {
                   children: [
                     getOrderDetailHeader(
                         contx, Icons.location_on, "Drop", order.dropLocation),
-                    getOrderDetailHeader(contx, Icons.category, "Weight",
-                        order.orderWeight.toString() + "KG"),
+                    getOrderDetailHeader(contx, Icons.monitor_weight_sharp,
+                        "Weight", order.orderWeight.toString() + "KG"),
                     getOrderDetailHeader(
                       contx,
                       Icons.calendar_today_outlined,
@@ -388,8 +388,7 @@ class OrderDetailScreen extends StatelessWidget {
                       physics: NeverScrollableScrollPhysics(),
                       itemBuilder: (contx, index) {
                         return BidWidget(
-                      
-                          courierId:order.bids[index].courierId,
+                          courierId: order.bids[index].courierId,
                           order: order,
                           courierName: order.bids[index].courierName,
                           bidId: order.bids[index].bidId,

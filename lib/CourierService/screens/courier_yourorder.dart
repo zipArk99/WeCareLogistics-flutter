@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wecare_logistics/CourierService/drawer/courier_drawer.dart';
 import 'package:wecare_logistics/CourierService/screens/activeorder_tab.dart';
 import 'package:wecare_logistics/CourierService/screens/completedorder_tab.dart';
 
@@ -9,6 +10,7 @@ class CourierYourOrder extends StatelessWidget {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
+        drawer: CourierDrawer(),
         appBar: AppBar(
           title: Text("Your Order"),
           bottom: TabBar(

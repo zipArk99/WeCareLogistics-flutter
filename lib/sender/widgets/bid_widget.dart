@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
-import 'package:wecare_logistics/models/bids_model.dart';
+
 import 'package:wecare_logistics/models/order_model.dart';
-import 'package:wecare_logistics/models/transaction_model.dart';
-import 'package:wecare_logistics/models/user.dart';
-import 'package:wecare_logistics/models/your_order.dart';
+import 'package:wecare_logistics/sender/widgets/transaction_widget.dart';
 
 class BidWidget extends StatelessWidget {
   final Order order;
@@ -25,74 +21,6 @@ class BidWidget extends StatelessWidget {
       required this.courierName,
       required this.bidExpectedDeliveryDate,
       required this.isCourierService});
-
-  Future<void> transactionDialogBox(contx) {
-    return showDialog(
-        context: contx,
-        builder: (contx) {
-          return Dialog(
-            child: Container(
-              height: 250,
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Text(
-                    "Pay The \nAmount",
-                    style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.w300,
-                      color: Theme.of(contx).primaryColor,
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.symmetric(vertical: 20),
-                    child: TextFormField(
-                      readOnly: true,
-                      initialValue: price.toString(),
-                      style: TextStyle(
-                          fontSize: 20,
-                          color: Theme.of(contx).primaryColor,
-                          fontWeight: FontWeight.w500),
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                        prefixText: "\u{20B9} ",
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: double.infinity,
-                    margin: EdgeInsets.symmetric(horizontal: 20),
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        var transactionId = '';
-
-                        transactionId = await Provider.of<TransactionProvider>(
-                                contx,
-                                listen: false)
-                            .proccessTransaction(
-                          courierName: courierName,
-                          courierId: courierId,
-                          transactionType: 'payment',
-                          bidId: bidId,
-                          senderId: order.senderId,
-                          transactionAmount: price,
-                        );
-
-                        await Provider.of<YourOrderProvider>(contx,
-                                listen: false)
-                            .addYourOrder(order, bidId, transactionId);
-                      },
-                      child: Text("PAY"),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
-  }
 
   @override
   Widget build(BuildContext contx) {
@@ -153,7 +81,7 @@ class BidWidget extends StatelessWidget {
                 ),
               ),
               title: Text(
-                "Shipment cost ~ ${price}",
+                "Shipment cost ~ $price",
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
               ),
               subtitle: Text(
@@ -222,7 +150,13 @@ class BidWidget extends StatelessWidget {
                                   TextButton(
                                     onPressed: () {
                                       Navigator.of(contx).pop();
-                                      transactionDialogBox(contx);
+                                      TransactionDialogBox(
+                                          contx: contx,
+                                          courierName: courierName,
+                                          courierId: courierId,
+                                          price: price,
+                                          bidId: bidId,
+                                          order: order);
                                     },
                                     child: Text("Confirm"),
                                   ),
