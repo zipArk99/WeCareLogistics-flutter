@@ -31,7 +31,7 @@ class _CourierActiveOrderTabState extends State<CourierActiveOrderTab> {
   @override
   Widget build(BuildContext contx) {
     List<YourOrder> yourOrderList =
-        Provider.of<YourOrderProvider>(contx).getYourOrderList;
+        Provider.of<YourOrderProvider>(contx, listen: false).getYourOrderList;
 
     return isLoading
         ? Center(
@@ -40,6 +40,7 @@ class _CourierActiveOrderTabState extends State<CourierActiveOrderTab> {
         : ListView.builder(
             itemBuilder: (contx, index) {
               return CourierYourOrder(
+                yourOrderId: yourOrderList[index].yourOrderId,
                 orderWeight: yourOrderList[index].order.orderWeight,
                 orderLendth: yourOrderList[index].order.orderLendth,
                 orderBreadth: yourOrderList[index].order.orderBreadth,

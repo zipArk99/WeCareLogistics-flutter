@@ -97,7 +97,7 @@ class MyApp extends StatelessWidget {
               CourierRegistrationScreen(),
           CourierMyProfile.courierMyProfileRoute: (contx) => CourierMyProfile(),
           CourierYourOrder.courierYourOrderRoute: (contx) => CourierYourOrder(),
-          CourierWallet.courierWalletRoute:(contx)=>CourierWallet(),
+          CourierWallet.courierWalletRoute: (contx) => CourierWallet(),
         },
       ),
     );

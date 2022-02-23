@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:wecare_logistics/models/your_order.dart';
 
 class ShowActivateDialogBox {
   BuildContext contx;
-  ShowActivateDialogBox({required this.contx}) {
+  final String yourOrderId;
+  ShowActivateDialogBox({required this.contx, required this.yourOrderId}) {
     showDialog(
         context: contx,
         builder: (contx) {
-          return ActivateYourOrder();
+          return ActivateYourOrder(yourOrderId: yourOrderId);
         });
   }
 }
 
 class ActivateYourOrder extends StatefulWidget {
+  final String yourOrderId;
+  ActivateYourOrder({required this.yourOrderId});
   @override
   State<StatefulWidget> createState() {
     return ActivateYourOrderState();
@@ -23,6 +28,7 @@ class ActivateYourOrderState extends State<ActivateYourOrder> {
   late String pickUpDate = '';
   late String pickUpFromTime = 'From';
   late String pickUpToTime = 'To';
+  bool isLoading = false;
 
   Future<void> selectPickUpDate(
     BuildContext contx,
@@ -64,6 +70,13 @@ class ActivateYourOrderState extends State<ActivateYourOrder> {
     }
   }
 
+  bool checkFieldsStatus() {
+    if (pickUpDate != '' && pickUpFromTime != 'From' && pickUpToTime != 'To') {
+      return true;
+    }
+    return false;
+  }
+
   void selectToPickUpTime(BuildContext contx) async {
     var toTime = await showTimePicker(
       context: contx,
@@ -72,8 +85,9 @@ class ActivateYourOrderState extends State<ActivateYourOrder> {
 
     if (toTime != null) {
       setState(() {
+        var localization = MaterialLocalizations.of(context);
         print("inside date");
-        pickUpToTime = toTime.toString();
+        pickUpToTime = localization.formatTimeOfDay(toTime);
         print(pickUpToTime);
       });
     } else {
@@ -86,16 +100,17 @@ class ActivateYourOrderState extends State<ActivateYourOrder> {
   Widget createTextField(String label, Function() fun, String value) {
     return Expanded(
       child: Container(
-        height: 40,
+        height: 35,
         child: TextFormField(
-          initialValue: value,
           readOnly: true,
           onTap: fun,
           decoration: InputDecoration(
+            hintStyle: TextStyle(fontSize: 10),
+            border: OutlineInputBorder(),
             hintText: value,
             prefixIcon: Icon(Icons.av_timer_rounded),
             labelStyle: TextStyle(
-              fontSize: 11,
+              fontSize: 2,
             ),
           ),
         ),
@@ -124,7 +139,7 @@ class ActivateYourOrderState extends State<ActivateYourOrder> {
                     : Text(
                         pickUpDate,
                         style: TextStyle(
-                            fontSize: 20,
+                            fontSize: 15,
                             color: Theme.of(contx).primaryColor,
                             fontWeight: FontWeight.bold),
                       ),
@@ -170,7 +185,24 @@ class ActivateYourOrderState extends State<ActivateYourOrder> {
               width: double.infinity,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(primary: Colors.green),
-                onPressed: () {},
+                onPressed: checkFieldsStatus()
+                    ? () async {
+                        setState(() {
+                          isLoading = true;
+                        });
+                        await Provider.of<YourOrderProvider>(contx,
+                                listen: false)
+                            .activateYourOrder(
+                                yourOrderId: widget.yourOrderId,
+                                pickUpDate: pickUpDate,
+                                pickUpFromTime: pickUpFromTime,
+                                pickUpToTime: pickUpToTime);
+                        setState(() {
+                          isLoading = false;
+                        });
+                        Navigator.of(context).pop();
+                      }
+                    : null,
                 child: Text("Activate Order"),
               ),
             ),
