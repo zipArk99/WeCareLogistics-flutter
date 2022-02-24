@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "20552792905",
+    "firebase_url": "https://logistics-87e01-default-rtdb.firebaseio.com",
+    "project_id": "logistics-87e01",
+    "storage_bucket": "logistics-87e01.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:20552792905:android:a890ca6a9c5c8afe2db898",
+        "android_client_info": {
+          "package_name": "com.example.wecare_logistics"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "20552792905-jpf2mp7b88jov0pkk9fvv7i34smrhshr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDTipbWZ5lo14u9u-lmxe5Ac5W2beJojqE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "20552792905-jpf2mp7b88jov0pkk9fvv7i34smrhshr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

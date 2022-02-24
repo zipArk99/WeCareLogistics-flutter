@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wecare_logistics/models/generate_label.dart';
+import 'package:wecare_logistics/models/send_email.dart';
 
 class YourOrderWidget extends StatelessWidget {
   final String yourOrderId;
@@ -11,6 +12,10 @@ class YourOrderWidget extends StatelessWidget {
   final double price;
   final double yourOrderWeight;
   final String yourOrderPickUp;
+  final String yourOrderStatus;
+  final String pickUpDate;
+  final String pickUpFromDate;
+  final String pickUpToDate;
 
   YourOrderWidget({
     required this.yourOrderId,
@@ -22,6 +27,10 @@ class YourOrderWidget extends StatelessWidget {
     required this.price,
     required this.yourOrderWeight,
     required this.yourOrderPickUp,
+    required this.pickUpDate,
+    required this.pickUpFromDate,
+    required this.pickUpToDate,
+    required this.yourOrderStatus,
   });
 
   void openOptionsDialogBox(BuildContext contx) {
@@ -57,7 +66,7 @@ class YourOrderWidget extends StatelessWidget {
       fit: FlexFit.tight,
       child: InkWell(
         onTap: () {
-          var label = Label(
+          /*   var label = Label(
               mailType: 'PRIORITY MAIL',
               weight: yourOrderWeight,
               senderName: 'Shaun shah',
@@ -65,7 +74,8 @@ class YourOrderWidget extends StatelessWidget {
               pickUp: yourOrderPickUp,
               drop: dropLocation,
               orderId: yourOrderId);
-          label.generateLableClass(contx);
+          label.generateLableClass(contx); */
+          sendLabelToEamil();
           Navigator.of(contx).pop();
         },
         child: Container(
@@ -85,7 +95,7 @@ class YourOrderWidget extends StatelessWidget {
   Widget build(BuildContext contx) {
     var reciverNameArray = reciverName.split("");
     return Container(
-      margin: EdgeInsets.all(10),
+      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 25),
       width: double.infinity,
       child: Card(
         elevation: 10,
@@ -94,6 +104,52 @@ class YourOrderWidget extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Container(
+                color: yourOrderStatus == 'Inactive'
+                    ? Colors.red.shade400
+                    : Colors.green,
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: ListTile(
+                        leading: Icon(
+                          Icons.cached_sharp,
+                          size: 35,
+                          color: Colors.black,
+                        ),
+                        subtitle: Text(
+                          yourOrderStatus,
+                        ),
+                        title: Text(
+                          "Status ",
+                          style: TextStyle(fontFamily: 'Poppins', fontSize: 12),
+                        ),
+                      ),
+                    ),
+                    if (yourOrderStatus == 'Activate')
+                      Expanded(
+                        flex: 4,
+                        child: ListTile(
+                          leading: Icon(
+                            Icons.airport_shuttle_sharp,
+                            size: 35,
+                            color: Colors.black,
+                          ),
+                          subtitle: Text(
+                            "$pickUpDate , $pickUpFromDate - $pickUpToDate",
+                            style: TextStyle(fontSize: 12),
+                          ),
+                          title: Text(
+                            "PickUp ",
+                            style:
+                                TextStyle(fontFamily: 'Poppins', fontSize: 12),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Row(

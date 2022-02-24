@@ -16,20 +16,45 @@ class SenderHomePageScreen extends StatefulWidget {
 class _SenderHomePageScreenState extends State<SenderHomePageScreen> {
   bool init = true;
   bool isLoading = false;
-  @override
-  Widget createHomePageContainer() {
+
+  Widget createHomePageContainer(String title, int value) {
     return Flexible(
       flex: 1,
       fit: FlexFit.tight,
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-        height: 125,
-        width: 100,
-        color: Colors.amber,
+        child: Card(
+          color: Colors.amber,
+          elevation: 10,
+          child: InkWell(
+            onTap: () {},
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text(
+                  "$value",
+                  style: TextStyle(
+                    fontSize: 50,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                ),
+                Container(
+                  child: Text(
+                    "$title\nOrders",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontFamily: 'Poppins'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
 
+  @override
   void didChangeDependencies() async {
     setState(() {
       isLoading = true;
@@ -52,21 +77,21 @@ class _SenderHomePageScreenState extends State<SenderHomePageScreen> {
         children: [
           Row(
             children: [
-              createHomePageContainer(),
-              createHomePageContainer(),
+              createHomePageContainer("Saved", 5),
+              createHomePageContainer("Published", 8),
             ],
           ),
           Row(
             children: [
-              createHomePageContainer(),
-              createHomePageContainer(),
+              createHomePageContainer("Active", 7),
+              createHomePageContainer("Completed", 10),
             ],
           ),
           Container(
             alignment: Alignment.bottomLeft,
             margin: EdgeInsets.only(top: 20, left: 20),
             child: Text(
-              "Orders " + "( ${order.getOrderList().length} )",
+              "Saved Orders " + "( ${order.getOrderList().length} )",
               style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
             ),
           ),

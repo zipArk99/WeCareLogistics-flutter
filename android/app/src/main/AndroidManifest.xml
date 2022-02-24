@@ -1,5 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.wecare_logistics">
+    
+
+
    <application
         android:label="wecare_logistics"
         android:icon="@mipmap/ic_launcher">

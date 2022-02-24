@@ -39,6 +39,9 @@ dependencies:
   path_provider: ^2.0.1
   open_file: ^3.2.1
   syncfusion_flutter_barcodes: ^19.4.52
+  mailer: ^5.1.0
+  google_sign_in: ^5.1.0
+  
   
 
 

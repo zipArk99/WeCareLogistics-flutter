@@ -26,7 +26,7 @@ class CourierYourOrder extends StatelessWidget {
   });
   @override
   Widget build(BuildContext contx) {
-    Provider.of<YourOrderProvider>(contx);
+  
     return Container(
       color: Colors.grey.shade200,
       width: double.infinity,
@@ -34,7 +34,9 @@ class CourierYourOrder extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            color: Theme.of(contx).errorColor,
+            color: orderStatus == 'Inactive'
+                ? Theme.of(contx).errorColor
+                : Colors.green,
             child: ListTile(
               leading: Icon(
                 Icons.cached_sharp,
@@ -46,16 +48,19 @@ class CourierYourOrder extends StatelessWidget {
                 "Status ",
                 style: TextStyle(fontFamily: 'Poppins', fontSize: 12),
               ),
-              trailing: ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.green,
-                ),
-                onPressed: () {
-                  ShowActivateDialogBox(contx: contx,yourOrderId:yourOrderId);
-                },
-                icon: Icon(Icons.check),
-                label: Text("Select Pickup"),
-              ),
+              trailing: orderStatus == 'Inactive'
+                  ? ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.green,
+                      ),
+                      onPressed: () {
+                        ShowActivateDialogBox(
+                            contx: contx, yourOrderId: yourOrderId);
+                      },
+                      icon: Icon(Icons.check),
+                      label: Text("Select Pickup"),
+                    )
+                  : null,
             ),
           ),
           ListTile(

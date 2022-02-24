@@ -128,7 +128,7 @@ class ActivateYourOrderState extends State<ActivateYourOrder> {
           vertical: 40,
           horizontal: 10,
         ),
-        child: Column(
+        child:isLoading?Center(child:CircularProgressIndicator(),) :Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Row(
@@ -187,7 +187,7 @@ class ActivateYourOrderState extends State<ActivateYourOrder> {
                 style: ElevatedButton.styleFrom(primary: Colors.green),
                 onPressed: checkFieldsStatus()
                     ? () async {
-                        setState(() {
+                         setState(() {
                           isLoading = true;
                         });
                         await Provider.of<YourOrderProvider>(contx,
@@ -200,7 +200,7 @@ class ActivateYourOrderState extends State<ActivateYourOrder> {
                         setState(() {
                           isLoading = false;
                         });
-                        Navigator.of(context).pop();
+                        Navigator.of(context).pop(); 
                       }
                     : null,
                 child: Text("Activate Order"),

@@ -197,7 +197,7 @@ class YourOrderProvider with ChangeNotifier {
         },
       );
 
-      _yourOrderList = [...temp];
+      _yourOrderList = [...temp.reversed];
     } catch (error) {
       print("error occured while fetching your order::" + error.toString());
     }
@@ -229,7 +229,7 @@ class YourOrderProvider with ChangeNotifier {
         return element.yourOrderId == yourOrderId;
       });
 
-      yourOrder.orderStatus = 'Activate';
+      /* yourOrder.orderStatus = 'Activate'; */
 
       var response2 = await http.patch(
         url,
@@ -248,12 +248,12 @@ class YourOrderProvider with ChangeNotifier {
         return;
       }
 
-      var decodedJsonString =
-          json.decode(response2.body) as Map<String, dynamic>;
+      /*    var decodedJsonString =
+          json.decode(response2.body) as Map<String, dynamic>; */
 
-      yourOrder.pickUpDate = decodedJsonString['pickUpDate'];
+      /*    yourOrder.pickUpDate = decodedJsonString['pickUpDate'];
       yourOrder.pickUpFromTime = decodedJsonString['pickUpFromTime'];
-      yourOrder.pickUpToTime = decodedJsonString['pickToFromTime'];
+      yourOrder.pickUpToTime = decodedJsonString['pickToFromTime']; */
 
       notifyListeners();
     } catch (error) {
