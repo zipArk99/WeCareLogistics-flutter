@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wecare_logistics/models/generate_label.dart';
+import 'package:wecare_logistics/models/location_tracking.dart';
 import 'package:wecare_logistics/models/send_email.dart';
 
 class YourOrderWidget extends StatelessWidget {
@@ -66,7 +67,7 @@ class YourOrderWidget extends StatelessWidget {
       fit: FlexFit.tight,
       child: InkWell(
         onTap: () {
-          /*   var label = Label(
+          var label = Label(
               mailType: 'PRIORITY MAIL',
               weight: yourOrderWeight,
               senderName: 'Shaun shah',
@@ -74,8 +75,8 @@ class YourOrderWidget extends StatelessWidget {
               pickUp: yourOrderPickUp,
               drop: dropLocation,
               orderId: yourOrderId);
-          label.generateLableClass(contx); */
-          sendLabelToEamil();
+          label.generateLableClass(contx);
+
           Navigator.of(contx).pop();
         },
         child: Container(
@@ -244,7 +245,10 @@ class YourOrderWidget extends StatelessWidget {
                   ),
                 ),
                 trailing: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(contx)
+                        .pushNamed(LocationTracking.locationTrackingRoute);
+                  },
                   child: Text(
                     "Track Order",
                     style: TextStyle(

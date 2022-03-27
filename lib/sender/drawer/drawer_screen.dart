@@ -33,6 +33,7 @@ class DrawerScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext contx) {
+    UserProvider user = Provider.of<UserProvider>(contx);
     return Drawer(
       child: SingleChildScrollView(
         child: Column(
@@ -148,7 +149,9 @@ class DrawerScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(5),
               child: TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  user.logOutUser(contx);
+                },
                 style: ButtonStyle(
                   padding:
                       MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(15)),

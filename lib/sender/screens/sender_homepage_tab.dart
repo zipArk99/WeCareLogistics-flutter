@@ -77,14 +77,14 @@ class _SenderHomePageScreenState extends State<SenderHomePageScreen> {
         children: [
           Row(
             children: [
-              createHomePageContainer("Saved", 5),
-              createHomePageContainer("Published", 8),
+              createHomePageContainer("Saved", 1),
+              createHomePageContainer("Published", 0),
             ],
           ),
           Row(
             children: [
-              createHomePageContainer("Active", 7),
-              createHomePageContainer("Completed", 10),
+              createHomePageContainer("Active", 3),
+              createHomePageContainer("Completed", 1),
             ],
           ),
           Container(

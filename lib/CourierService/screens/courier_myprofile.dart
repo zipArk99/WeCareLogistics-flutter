@@ -44,6 +44,7 @@ class CourierMyProfile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
+                margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
                 width: double.infinity,
                 child: Card(
                   color: Theme.of(contx).primaryColorLight,

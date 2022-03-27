@@ -4,7 +4,7 @@
 
 
    <application
-        android:label="wecare_logistics"
+        android:label="WeCare"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
@@ -40,5 +40,8 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyB3WtXSC6lwIEgok-YqIXO-xlRh8ziiAuA"/>
     </application>
 </manifest>

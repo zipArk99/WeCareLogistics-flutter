@@ -70,16 +70,6 @@ class _OrdersWidgetState extends State<OrdersWidget> {
           ),
           trailing: Stack(
             children: [
-              Positioned(
-                right: 20,
-                child: Container(
-                  height: 30,
-                  width: 30,
-                  child: Chip(
-                    label: Text('hello'),
-                  ),
-                ),
-              ),
               Expanded(
                 child: IconButton(
                   onPressed: () {

@@ -1,7 +1,22 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:wecare_logistics/screens/signup_screen.dart';
 
-class SplashScreen extends StatelessWidget {
+class SplashScreen extends StatefulWidget {
+  @override
+  _SplashScreenState createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    Timer(Duration(seconds: 5), () {
+      Navigator.of(context).popAndPushNamed(SignUpScreen.signUpScreenRoute);
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext contx) {
     return Scaffold(
@@ -23,18 +38,7 @@ class SplashScreen extends StatelessWidget {
               child: Image.asset("lib/assets/images/WeCare.png"),
             ),
             Container(
-              margin: EdgeInsets.symmetric(horizontal: 10),
-              height: 70,
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.of(contx)
-                      .pushReplacementNamed(SignUpScreen.signUpScreenRoute);
-                },
-                child: Text(
-                  "NEXT",
-                ),
-              ),
+              child: CircularProgressIndicator(),
             )
           ],
         ),

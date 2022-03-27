@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:wecare_logistics/models/bids_model.dart';
 import 'package:wecare_logistics/models/order_model.dart';
@@ -92,7 +93,7 @@ class OrderDetailScreen extends StatelessWidget {
                       contx,
                       Icons.calendar_today_outlined,
                       "Delivery Date",
-                      order.expectedDelivery.toString(),
+                      DateFormat('dd MMM').format(order.expectedDelivery),
                     ),
                   ],
                 ),

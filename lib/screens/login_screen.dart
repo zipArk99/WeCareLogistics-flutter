@@ -61,7 +61,9 @@ class LoginPageScreenState extends State<LoginPageScreen> {
 
   @override
   Widget build(BuildContext contx) {
+    var device_height = MediaQuery.of(context).size.height;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: isLoading
           ? Center(
               child: CircularProgressIndicator(),
@@ -70,174 +72,181 @@ class LoginPageScreenState extends State<LoginPageScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Form(
                 key: _loginForm,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Container(
-                      padding: EdgeInsets.only(top: 20, bottom: 10),
-                      alignment: Alignment.center,
-                      child: Text(
-                        "Login",
-                        style: TextStyle(fontSize: 24),
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(bottom: 50),
-                      width: double.infinity,
-                      height: 6,
-                      color: Theme.of(contx).primaryColor,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
+                child: SingleChildScrollView(
+                  child: Container(
+                    height: device_height,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        TextFormField(
-                          decoration: InputDecoration(
-                            labelText: "Email",
-                            border: OutlineInputBorder(),
+                        Container(
+                          padding: EdgeInsets.only(top: 20, bottom: 10),
+                          alignment: Alignment.center,
+                          child: Text(
+                            "Login",
+                            style: TextStyle(fontSize: 24),
                           ),
-                          textInputAction: TextInputAction.next,
-                          keyboardType: TextInputType.emailAddress,
-                          onSaved: (value) {
-                            userData['email'] = value!;
-                          },
-                          onFieldSubmitted: (_) {
-                            Focus.of(contx).requestFocus(_passwordFocus);
-                          },
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return "Empty Field!";
-                            }
-                            return null;
-                          },
                         ),
-                        SizedBox(
-                          height: 20,
+                        Container(
+                          margin: EdgeInsets.only(bottom: 50),
+                          width: double.infinity,
+                          height: 6,
+                          color: Theme.of(contx).primaryColor,
                         ),
-                        TextFormField(
-                          focusNode: _passwordFocus,
-                          obscureText: !_passwordVisibility,
-                          autocorrect: false,
-                          decoration: InputDecoration(
-                            suffixIcon: IconButton(
-                              icon: _passwordVisibility
-                                  ? Icon(
-                                      Icons.visibility,
-                                      color: Colors.black,
-                                    )
-                                  : Icon(
-                                      Icons.visibility_off,
-                                      color: Colors.black,
-                                    ),
-                              onPressed: () {
-                                setState(() {
-                                  _passwordVisibility = !_passwordVisibility;
-                                });
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            TextFormField(
+                              decoration: InputDecoration(
+                                labelText: "Email",
+                                border: OutlineInputBorder(),
+                              ),
+                              textInputAction: TextInputAction.next,
+                              keyboardType: TextInputType.emailAddress,
+                              onSaved: (value) {
+                                userData['email'] = value!;
+                              },
+                              onFieldSubmitted: (_) {
+                                Focus.of(contx).requestFocus(_passwordFocus);
+                              },
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return "Empty Field!";
+                                }
+                                return null;
                               },
                             ),
-                            labelText: "Password",
-                            border: OutlineInputBorder(),
-                          ),
-                          textInputAction: TextInputAction.done,
-                          keyboardType: TextInputType.emailAddress,
-                          onSaved: (value) {
-                            userData['password'] = value!;
-                          },
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return "Empty Field!";
-                            }
-                            return null;
-                          },
-                        ),
-                        TextButton(
-                          onPressed: () {},
-                          child: Text(
-                            "Forget Password?",
-                            style: TextStyle(
-                              color: Theme.of(contx).errorColor,
+                            SizedBox(
+                              height: 20,
                             ),
-                          ),
-                        )
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Container(
-                          height: 70,
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              saveLogin();
-                              FocusScope.of(contx).unfocus();
-                            },
-                            child: Text("Sign in"),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Container(
-                              color: Colors.black,
-                              width: 150,
-                              height: 2,
-                              margin: EdgeInsets.only(left: 10.0, right: 10.0),
-                              child: Divider(),
+                            TextFormField(
+                              focusNode: _passwordFocus,
+                              obscureText: !_passwordVisibility,
+                              autocorrect: false,
+                              decoration: InputDecoration(
+                                suffixIcon: IconButton(
+                                  icon: _passwordVisibility
+                                      ? Icon(
+                                          Icons.visibility,
+                                          color: Colors.black,
+                                        )
+                                      : Icon(
+                                          Icons.visibility_off,
+                                          color: Colors.black,
+                                        ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _passwordVisibility =
+                                          !_passwordVisibility;
+                                    });
+                                  },
+                                ),
+                                labelText: "Password",
+                                border: OutlineInputBorder(),
+                              ),
+                              textInputAction: TextInputAction.done,
+                              keyboardType: TextInputType.emailAddress,
+                              onSaved: (value) {
+                                userData['password'] = value!;
+                              },
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return "Empty Field!";
+                                }
+                                return null;
+                              },
                             ),
-                            Text("Or"),
-                            Container(
-                                color: Colors.black,
-                                width: 150,
-                                height: 2,
-                                margin:
-                                    EdgeInsets.only(left: 10.0, right: 10.0),
-                                child: Divider()),
+                            TextButton(
+                              onPressed: () {},
+                              child: Text(
+                                "Forget Password?",
+                                style: TextStyle(
+                                  color: Theme.of(contx).errorColor,
+                                ),
+                              ),
+                            )
                           ],
                         ),
-                        SizedBox(
-                          height: 20,
+                        Column(
+                          children: [
+                            Container(
+                              height: 70,
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  saveLogin();
+                                  FocusScope.of(contx).unfocus();
+                                },
+                                child: Text("Sign in"),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Container(
+                                  color: Colors.black,
+                                  width: 150,
+                                  height: 2,
+                                  margin:
+                                      EdgeInsets.only(left: 10.0, right: 10.0),
+                                  child: Divider(),
+                                ),
+                                Text("Or"),
+                                Container(
+                                    color: Colors.black,
+                                    width: 150,
+                                    height: 2,
+                                    margin: EdgeInsets.only(
+                                        left: 10.0, right: 10.0),
+                                    child: Divider()),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Container(
+                              height: 70,
+                              width: double.infinity,
+                              child: ElevatedButton.icon(
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.white,
+                                ),
+                                onPressed: () {},
+                                icon: Container(
+                                  width: 50,
+                                  height: 50,
+                                  child: Image.asset(
+                                    "lib/assets/images/googleLogo.png",
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                label: Text(
+                                  "Sign In With Google",
+                                  style: TextStyle(
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                        Container(
-                          height: 70,
-                          width: double.infinity,
-                          child: ElevatedButton.icon(
-                            style: ElevatedButton.styleFrom(
-                              primary: Colors.white,
+                        Column(
+                          children: [
+                            Text("Don't have an account?"),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(contx).pushReplacementNamed(
+                                    SignUpScreen.signUpScreenRoute);
+                              },
+                              child: Text("Sign Up"),
                             ),
-                            onPressed: () {},
-                            icon: Container(
-                              width: 50,
-                              height: 50,
-                              child: Image.asset(
-                                "lib/assets/images/googleLogo.png",
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            label: Text(
-                              "Sign In With Google",
-                              style: TextStyle(
-                                color: Colors.black87,
-                              ),
-                            ),
-                          ),
+                          ],
                         ),
                       ],
                     ),
-                    Column(
-                      children: [
-                        Text("Don't have an account?"),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(contx).pushReplacementNamed(
-                                SignUpScreen.signUpScreenRoute);
-                          },
-                          child: Text("Sign Up"),
-                        ),
-                      ],
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ),

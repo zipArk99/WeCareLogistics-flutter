@@ -5,6 +5,7 @@ import 'package:wecare_logistics/CourierService/screens/courier_myprofile.dart';
 import 'package:wecare_logistics/CourierService/screens/courier_wallet.dart';
 import 'package:wecare_logistics/CourierService/screens/courier_yourorder.dart';
 import 'package:wecare_logistics/CourierService/screens/courierservise_registration_screen.dart';
+import 'package:wecare_logistics/models/location_tracking.dart';
 import 'package:wecare_logistics/models/transaction_model.dart';
 import 'package:wecare_logistics/models/user.dart';
 import 'package:wecare_logistics/models/your_order.dart';
@@ -87,7 +88,7 @@ class MyApp extends StatelessWidget {
               SenderYourOrderTabs(),
           UserProfile.userProfileRoute: (contx) => UserProfile(),
           SenderWallet.senderWalletRoute: (contx) => SenderWallet(),
-
+          LocationTracking.locationTrackingRoute: (contx) => LocationTracking(),
           //-----------------------------------------------------------
 
           //Courier Service Routes

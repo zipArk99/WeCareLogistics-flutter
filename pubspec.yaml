@@ -41,6 +41,12 @@ dependencies:
   syncfusion_flutter_barcodes: ^19.4.52
   mailer: ^5.1.0
   google_sign_in: ^5.1.0
+  location_web: ^3.1.1
+  google_maps_flutter: ^2.0.6
+  location: ^4.3.0
+  flutter_polyline_points: ^1.0.0
+ 
+
   
   
 
@@ -48,6 +54,7 @@ dependencies:
 dev_dependencies:
   flutter_test: 
     sdk: flutter
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
