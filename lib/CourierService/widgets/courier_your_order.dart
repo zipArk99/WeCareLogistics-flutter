@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:wecare_logistics/CourierService/widgets/activate_yourorder.dart';
 import 'package:wecare_logistics/CourierService/widgets/show_address.dart';
+import 'package:wecare_logistics/models/your_order.dart';
 
 class CourierYourOrder extends StatelessWidget {
   final double orderWeight;
@@ -10,6 +12,7 @@ class CourierYourOrder extends StatelessWidget {
   final String pickUpLocation;
   final String dropLocation;
   final String orderStatus;
+  final String yourOrderId;
 
   CourierYourOrder({
     required this.orderWeight,
@@ -19,9 +22,11 @@ class CourierYourOrder extends StatelessWidget {
     required this.pickUpLocation,
     required this.dropLocation,
     required this.orderStatus,
+    required this.yourOrderId,
   });
   @override
   Widget build(BuildContext contx) {
+  
     return Container(
       color: Colors.grey.shade200,
       width: double.infinity,
@@ -29,7 +34,9 @@ class CourierYourOrder extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            color: Theme.of(contx).errorColor,
+            color: orderStatus == 'Inactive'
+                ? Theme.of(contx).errorColor
+                : Colors.green,
             child: ListTile(
               leading: Icon(
                 Icons.cached_sharp,
@@ -41,16 +48,19 @@ class CourierYourOrder extends StatelessWidget {
                 "Status ",
                 style: TextStyle(fontFamily: 'Poppins', fontSize: 12),
               ),
-              trailing: ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.green,
-                ),
-                onPressed: () {
-                  ShowActivateDialogBox(contx: contx);
-                },
-                icon: Icon(Icons.check),
-                label: Text("Select Pickup"),
-              ),
+              trailing: orderStatus == 'Inactive'
+                  ? ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.green,
+                      ),
+                      onPressed: () {
+                        ShowActivateDialogBox(
+                            contx: contx, yourOrderId: yourOrderId);
+                      },
+                      icon: Icon(Icons.check),
+                      label: Text("Select Pickup"),
+                    )
+                  : null,
             ),
           ),
           ListTile(

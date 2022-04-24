@@ -14,18 +14,20 @@ class _CourierActiveOrderTabState extends State<CourierActiveOrderTab> {
 
   @override
   void didChangeDependencies() async {
-    if (isInit) {
-      setState(() {
-        isLoading = true;
-      });
-      await Provider.of<YourOrderProvider>(context, listen: false)
-          .fetchYourOrder(false);
-      setState(() {
-        isLoading = false;
-      });
-      isInit = false;
-      super.didChangeDependencies();
-    }
+    setState(() {
+      isLoading = true;
+    });
+    await Provider.of<YourOrderProvider>(context, listen: false)
+        .fetchYourOrder(false);
+    setState(() {
+      isLoading = false;
+    });
+    isInit = false;
+    super.didChangeDependencies();
+  }
+
+  Future<void> fetchData() async {
+    didChangeDependencies();
   }
 
   @override
@@ -33,23 +35,29 @@ class _CourierActiveOrderTabState extends State<CourierActiveOrderTab> {
     List<YourOrder> yourOrderList =
         Provider.of<YourOrderProvider>(contx).getYourOrderList;
 
-    return isLoading
-        ? Center(
-            child: CircularProgressIndicator(),
-          )
-        : ListView.builder(
-            itemBuilder: (contx, index) {
-              return CourierYourOrder(
-                orderWeight: yourOrderList[index].order.orderWeight,
-                orderLendth: yourOrderList[index].order.orderLendth,
-                orderBreadth: yourOrderList[index].order.orderBreadth,
-                orderHeight: yourOrderList[index].order.orderHeight,
-                pickUpLocation: yourOrderList[index].order.pickUpLocation,
-                dropLocation: yourOrderList[index].order.dropLocation,
-                orderStatus: yourOrderList[index].orderStatus,
-              );
-            },
-            itemCount: yourOrderList.length,
-          );
+    return RefreshIndicator(
+      onRefresh: () {
+        return fetchData();
+      },
+      child: isLoading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : ListView.builder(
+              itemBuilder: (contx, index) {
+                return CourierYourOrder(
+                  yourOrderId: yourOrderList[index].yourOrderId,
+                  orderWeight: yourOrderList[index].order.orderWeight,
+                  orderLendth: yourOrderList[index].order.orderLendth,
+                  orderBreadth: yourOrderList[index].order.orderBreadth,
+                  orderHeight: yourOrderList[index].order.orderHeight,
+                  pickUpLocation: yourOrderList[index].order.pickUpLocation,
+                  dropLocation: yourOrderList[index].order.dropLocation,
+                  orderStatus: yourOrderList[index].orderStatus,
+                );
+              },
+              itemCount: yourOrderList.length,
+            ),
+    );
   }
 }

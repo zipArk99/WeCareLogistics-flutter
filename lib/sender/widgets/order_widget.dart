@@ -68,16 +68,22 @@ class _OrdersWidgetState extends State<OrdersWidget> {
               fontSize: 12,
             ),
           ),
-          trailing: IconButton(
-            onPressed: () {
-              Provider.of<OrdersProvider>(contx, listen: false)
-                  .deleteOrder(widget.id);
-            },
-            icon: Icon(
-              Icons.delete,
-              size: 30,
-              color: Theme.of(contx).errorColor,
-            ),
+          trailing: Stack(
+            children: [
+              Expanded(
+                child: IconButton(
+                  onPressed: () {
+                    Provider.of<OrdersProvider>(contx, listen: false)
+                        .deleteOrder(widget.id);
+                  },
+                  icon: Icon(
+                    Icons.delete,
+                    size: 30,
+                    color: Theme.of(contx).errorColor,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),

@@ -1,7 +1,9 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:wecare_logistics/models/api_url.dart';
+import 'package:wecare_logistics/screens/login_screen.dart';
 
 class User with ChangeNotifier {
   String id;
@@ -178,7 +180,7 @@ class UserProvider with ChangeNotifier {
 
       print(response.body);
     } catch (error) {
-      print("error occured while logging::"+error.toString());
+      print("error occured while logging::" + error.toString());
     }
     return true;
   }
@@ -266,6 +268,20 @@ class UserProvider with ChangeNotifier {
         "Error occured while debiting amount from wallet::" + error.toString(),
       );
     }
+  }
+
+  void logOutUser(BuildContext contx) {
+    userFirstName = '';
+    userLastName = '';
+    userPhoneNo = 0;
+    id = '';
+    tokenId = '';
+    userEmail = '';
+    userPassword = '';
+    userRole = '';
+    walletBalance = 0;
+
+    Navigator.of(contx).popAndPushNamed(LoginPageScreen.loginPageScreenRoute);
   }
 
   /*---- Assigning user it's role---- */

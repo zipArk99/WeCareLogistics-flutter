@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:wecare_logistics/CourierService/screens/courier_homepage.dart';
 import 'package:wecare_logistics/CourierService/screens/courier_myprofile.dart';
 import 'package:wecare_logistics/CourierService/screens/courier_yourorder.dart';
 import 'package:wecare_logistics/CourierService/screens/courierservise_registration_screen.dart';
+import 'package:wecare_logistics/models/user.dart';
 
 class CourierDrawer extends StatelessWidget {
   Widget getListTile({
@@ -32,6 +34,7 @@ class CourierDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext contx) {
+      UserProvider user = Provider.of<UserProvider>(contx);
     return Drawer(
       child: Column(
         children: [
@@ -107,7 +110,34 @@ class CourierDrawer extends StatelessWidget {
             icon: Icons.qr_code_scanner_rounded,
             drawerTitle: "Scan QR",
             contx: contx,
-          )
+          ),
+                 Padding(
+            padding: const EdgeInsets.all(5),
+            child: TextButton(
+              onPressed: () {
+                user.logOutUser(contx);
+              },
+              style: ButtonStyle(
+                padding:
+                    MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(15)),
+                foregroundColor: MaterialStateProperty.all<Color>(Colors.red),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(0),
+                    side: BorderSide(
+                      color: Theme.of(contx).errorColor,
+                    ),
+                  ),
+                ),
+              ),
+              child: Text(
+                "LogOut",
+                style: TextStyle(
+                  color: Theme.of(contx).errorColor,
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );

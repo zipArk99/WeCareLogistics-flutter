@@ -139,6 +139,11 @@ class CreateOrderScreenState extends State<CreateOrderScreen> {
 
   @override
   Widget build(BuildContext contx) {
+    int? price = 0;
+    int? quantity = 0;
+    int? totalPrice = 400;
+    print("-----build function called----");
+
     var orderProvider = Provider.of<OrdersProvider>(contx, listen: false);
 
     return Scaffold(
@@ -445,6 +450,16 @@ class CreateOrderScreenState extends State<CreateOrderScreen> {
                         keyboardType: TextInputType.number,
                         textInputAction: TextInputAction.done,
                         focusNode: _quantityFocus,
+                        onChanged: (value) {
+                          print(
+                              "------------------------called-----------------");
+                          setState(() {
+                            quantity = int.parse(value);
+                            totalPrice = quantity;
+                            print("-------------------price::" +
+                                totalPrice.toString());
+                          });
+                        },
                         decoration: InputDecoration(
                           labelText: "Qyt",
                           border: OutlineInputBorder(),
@@ -485,7 +500,8 @@ class CreateOrderScreenState extends State<CreateOrderScreen> {
                     ),
                     Expanded(
                       child: TextFormField(
-                        enabled: false,
+                        readOnly: true,
+                        initialValue: quantity.toString(),
                         decoration: InputDecoration(labelText: "Total"),
                       ),
                     ),
